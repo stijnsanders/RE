@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{273047E9-4588-40BC-8C1E-360F978EFE9C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>REMulti</RootNamespace>
+    <AssemblyName>REMulti</AssemblyName>
+    <ApplicationIcon>reData.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="REBuilder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REBuilder.Designer.cs">
+      <DependentUpon>REBuilder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REFirst.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REFirst.Designer.cs">
+      <DependentUpon>REFirst.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RELast.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RELast.Designer.cs">
+      <DependentUpon>RELast.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RESort.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RESort.Designer.cs">
+      <DependentUpon>RESort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REDecide.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REDecide.Designer.cs">
+      <DependentUpon>REDecide.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="REIndex.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REIndex.Designer.cs">
+      <DependentUpon>REIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REInvert.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REInvert.Designer.cs">
+      <DependentUpon>REInvert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REJoin.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REJoin.Designer.cs">
+      <DependentUpon>REJoin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RELimit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RELimit.Designer.cs">
+      <DependentUpon>RELimit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REMerge.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REMerge.Designer.cs">
+      <DependentUpon>REMerge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REMultiply.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REMultiply.Designer.cs">
+      <DependentUpon>REMultiply.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REMultiReg.cs" />
+    <Compile Include="RERepeat.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RERepeat.Designer.cs">
+      <DependentUpon>RERepeat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RESequence.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RESequence.Designer.cs">
+      <DependentUpon>RESequence.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REUnique.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="REUnique.Designer.cs">
+      <DependentUpon>REUnique.cs</DependentUpon>
+    </Compile>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RELib\RELib.csproj">
+      <Project>{EE0361CF-8458-44D6-9770-55100D5B2194}</Project>
+      <Name>RELib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="reData.ico" />
+    <None Include="app.config" />
+    <None Include="Resources\Plus.png" />
+    <None Include="Resources\Minus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="REBuilder.resx">
+      <DependentUpon>REBuilder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REFirst.resx">
+      <DependentUpon>REFirst.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RELast.resx">
+      <DependentUpon>RELast.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RESort.resx">
+      <DependentUpon>RESort.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REDecide.resx">
+      <DependentUpon>REDecide.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REIndex.resx">
+      <DependentUpon>REIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REInvert.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>REInvert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REJoin.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>REJoin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RELimit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RELimit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REMerge.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>REMerge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REMultiply.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>REMultiply.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RERepeat.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RERepeat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RESequence.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RESequence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REUnique.resx">
+      <DependentUpon>REUnique.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>%25SystemRoot%25\system32\wscript.exe ..\..\UpdSvnRev.js $(ProjectDir)</PreBuildEvent>
+  </PropertyGroup>
+</Project>

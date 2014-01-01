@@ -1,0 +1,47 @@
+TODO
+
+open-source this!
+
+options dialog
+
+documentation how to extend (RELib? REBaseItem? REItemAttribute...)
+
+time in mins hours seconds
+read file: %
+write files: bytes, KB, MB...
+REBaseItem: status display
+
+idea: 'RELinkpoint PatchThrough' instead of/complementing Connecting event/DisconnectAll
+
+property bool Suspended on RELinkPoint (beats using local private bools)
+
+display 'count' on all connection while/after run
+
+datetime: {0:yyyy/mm/dd hh:nn} either on each input, either once
+
+select, multi-select (copy past undo...)
+delete selected
+
+run on error: select, makevisible item of linkpoint of current RunQueueEntry
+
+Multi:Index (start,inc,leftpad-zero,hex)
+String:Length (leftpad-zero,hex)
+
+
+File FileLarge in een?
+
+auto-repeat on constants?
+
+check when running: no change links!
+
+waar en hoe REFile streams sluiten?
+
+dll without default registration object: auto-generate menuitem?
+
+what with IEnumerable/IEnumerator?
+
+
+drag and drop files: multiple files: multiple load (offset locations if items?)
+recent files
+
+REJoin: consider PassAsItComes on by default, or always on

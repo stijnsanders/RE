@@ -1,0 +1,32 @@
+2.0.3.351
+- fixed issue with file left open after save
+- 'Builder' item (Multiple)
+- 'Groups' item (RegEx)
+2.0.2.270
+- improved checking for unsaved changes
+- 'copy to', 'paste from' options
+- use UTF8 for saved expressions
+- don't store width and height for unresizable items
+- drag to select multiple items, with ctrl pressed on release, inverts items from selection
+- some item types auto-patch-through connections when linking or deleting
+- 'Groups' item (RegEx)
+- 'Split by EOL' item (String operations)
+- 'Sort' item (Multiple) with an option to prepare entries to sort by (e.g. extract a numeric value)
+- 'Unique', 'First', 'Last' items (Multiple)
+- target .Net platform 4.0
+2.0.1.254
+- fixed issue with Large File keeping the file open after run
+- added AppendEOL
+- .rxe registration added to setup, Tools/Options menu removed
+- LargeFile: added 'number of lines' option
+2.0.1.248
+- clipboard functions on items, but on text when a text-control has focus
+2.0.1.241
+- added Multiple/Decide
+- fixed issue with Join taking all paths from a single item.
+- fixed issue with Multiply sending data over all paths to a single item.
+- added REFileSystem.dll
+2.0.1.240
+- project remake in CSharp
+- revised signal handling
+- open platform with item sets in libraries
