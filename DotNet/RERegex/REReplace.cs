@@ -32,7 +32,11 @@ namespace RERegex
 
         void lpRegExInput_Signal(RE.RELinkPoint Sender, object Data)
         {
-            lpOutput.Emit(ItemRegex.Replace(Data.ToString(), textBox1.Text));
+            if (cbGlobal.Checked)
+                lpOutput.Emit(ItemRegex.Replace(Data.ToString(), textBox1.Text));
+            else
+                lpOutput.Emit(ItemRegex.Replace(Data.ToString(), textBox1.Text, 1));
+
         }
 
         public override void LoadFromXml(System.Xml.XmlElement Element)
