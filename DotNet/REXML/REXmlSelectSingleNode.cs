@@ -38,7 +38,8 @@ namespace REXML
 
         private void lpInput_Signal(RELinkPoint Sender, object Data)
         {
-            lpOutput.Emit(REXML.AsXmlNode(Data).SelectSingleNode(xquery));
+            XmlNode x = REXML.AsXmlNode(Data).SelectSingleNode(xquery);
+            if (x != null) lpOutput.Emit(x);
         }
     }
 }

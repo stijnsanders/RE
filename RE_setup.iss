@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{9DA5420E-0943-4839-B1EE-844B9EC01336}
 AppName=Regular Expression
-AppVerName=Regular Expression 2.0.3.350
+AppVerName=Regular Expression 2.0.3.616
 AppPublisher=Double Sigma Programming
 AppPublisherURL=http://yoy.be/re
 AppSupportURL=http://yoy.be/re

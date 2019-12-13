@@ -36,7 +36,6 @@ namespace RERegex
                 lpOutput.Emit(ItemRegex.Replace(Data.ToString(), textBox1.Text));
             else
                 lpOutput.Emit(ItemRegex.Replace(Data.ToString(), textBox1.Text, 1));
-
         }
 
         public override void LoadFromXml(System.Xml.XmlElement Element)
