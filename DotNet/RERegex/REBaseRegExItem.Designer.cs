@@ -35,6 +35,12 @@ namespace RERegex
             this.lpRegExInput = new RE.RELinkPoint();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.checkPatternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.explicitCaptureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compiledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ignorePatternWhitespaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rightToLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eCMAScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cultureInvariantToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panItemClient.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -50,7 +56,7 @@ namespace RERegex
             // txtRegExPattern
             // 
             this.txtRegExPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRegExPattern.Location = new System.Drawing.Point(3, 3);
             this.txtRegExPattern.Name = "txtRegExPattern";
             this.txtRegExPattern.Size = new System.Drawing.Size(208, 21);
@@ -99,16 +105,64 @@ namespace RERegex
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkPatternToolStripMenuItem});
+            this.checkPatternToolStripMenuItem,
+            this.explicitCaptureToolStripMenuItem,
+            this.compiledToolStripMenuItem,
+            this.ignorePatternWhitespaceToolStripMenuItem,
+            this.rightToLeftToolStripMenuItem,
+            this.eCMAScriptToolStripMenuItem,
+            this.cultureInvariantToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(212, 180);
             // 
             // checkPatternToolStripMenuItem
             // 
             this.checkPatternToolStripMenuItem.Name = "checkPatternToolStripMenuItem";
-            this.checkPatternToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.checkPatternToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.checkPatternToolStripMenuItem.Text = "Check pattern";
             this.checkPatternToolStripMenuItem.Click += new System.EventHandler(this.checkPatternToolStripMenuItem_Click);
+            // 
+            // explicitCaptureToolStripMenuItem
+            // 
+            this.explicitCaptureToolStripMenuItem.Name = "explicitCaptureToolStripMenuItem";
+            this.explicitCaptureToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.explicitCaptureToolStripMenuItem.Text = "Explicit capture";
+            this.explicitCaptureToolStripMenuItem.Click += new System.EventHandler(this.explicitCaptureToolStripMenuItem_Click);
+            // 
+            // compiledToolStripMenuItem
+            // 
+            this.compiledToolStripMenuItem.Name = "compiledToolStripMenuItem";
+            this.compiledToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.compiledToolStripMenuItem.Text = "Compiled";
+            this.compiledToolStripMenuItem.Click += new System.EventHandler(this.compiledToolStripMenuItem_Click);
+            // 
+            // ignorePatternWhitespaceToolStripMenuItem
+            // 
+            this.ignorePatternWhitespaceToolStripMenuItem.Name = "ignorePatternWhitespaceToolStripMenuItem";
+            this.ignorePatternWhitespaceToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.ignorePatternWhitespaceToolStripMenuItem.Text = "Ignore pattern whitespace";
+            this.ignorePatternWhitespaceToolStripMenuItem.Click += new System.EventHandler(this.ignorePatternWhitespaceToolStripMenuItem_Click);
+            // 
+            // rightToLeftToolStripMenuItem
+            // 
+            this.rightToLeftToolStripMenuItem.Name = "rightToLeftToolStripMenuItem";
+            this.rightToLeftToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.rightToLeftToolStripMenuItem.Text = "Right to left";
+            this.rightToLeftToolStripMenuItem.Click += new System.EventHandler(this.rightToLeftToolStripMenuItem_Click);
+            // 
+            // eCMAScriptToolStripMenuItem
+            // 
+            this.eCMAScriptToolStripMenuItem.Name = "eCMAScriptToolStripMenuItem";
+            this.eCMAScriptToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.eCMAScriptToolStripMenuItem.Text = "ECMA Script";
+            this.eCMAScriptToolStripMenuItem.Click += new System.EventHandler(this.eCMAScriptToolStripMenuItem_Click);
+            // 
+            // cultureInvariantToolStripMenuItem
+            // 
+            this.cultureInvariantToolStripMenuItem.Name = "cultureInvariantToolStripMenuItem";
+            this.cultureInvariantToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.cultureInvariantToolStripMenuItem.Text = "Culture invariant";
+            this.cultureInvariantToolStripMenuItem.Click += new System.EventHandler(this.cultureInvariantToolStripMenuItem_Click);
             // 
             // REBaseRegExItem
             // 
@@ -135,5 +189,11 @@ namespace RERegex
         protected System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         protected RE.RELinkPoint lpRegExInput;
         protected System.Windows.Forms.TextBox txtRegExPattern;
+        private System.Windows.Forms.ToolStripMenuItem explicitCaptureToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compiledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ignorePatternWhitespaceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rightToLeftToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eCMAScriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cultureInvariantToolStripMenuItem;
     }
 }

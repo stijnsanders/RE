@@ -1,3 +1,7 @@
+2.0.3.614
+- target .Net Framework 4.6
+- XML selectSingleNode no output null when no node found
+- regex items: extra regex options
 2.0.3.351
 - fixed issue with file left open after save
 - 'Builder' item (Multiple)
@@ -13,7 +17,7 @@
 - 'Split by EOL' item (String operations)
 - 'Sort' item (Multiple) with an option to prepare entries to sort by (e.g. extract a numeric value)
 - 'Unique', 'First', 'Last' items (Multiple)
-- target .Net platform 4.0
+- target .Net Framework 4.0
 2.0.1.254
 - fixed issue with Large File keeping the file open after run
 - added AppendEOL

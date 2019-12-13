@@ -52,6 +52,18 @@ namespace RERegex
                     ro|=RegexOptions.Multiline;
                 else
                     ro|=RegexOptions.Singleline;
+                if (explicitCaptureToolStripMenuItem.Checked)
+                    ro |= RegexOptions.ExplicitCapture;
+                if (compiledToolStripMenuItem.Checked)
+                    ro |= RegexOptions.Compiled;
+                if (ignorePatternWhitespaceToolStripMenuItem.Checked)
+                    ro |= RegexOptions.IgnorePatternWhitespace;
+                if (rightToLeftToolStripMenuItem.Checked)
+                    ro |= RegexOptions.RightToLeft;
+                if (eCMAScriptToolStripMenuItem.Checked)
+                    ro |= RegexOptions.ECMAScript;
+                if (cultureInvariantToolStripMenuItem.Checked)
+                    ro |= RegexOptions.CultureInvariant;
 
                 return new Regex(txtRegExPattern.Text, ro);
             }
@@ -82,6 +94,12 @@ namespace RERegex
             txtRegExPattern.Text = xPattern.InnerText;
             cbRegExIgnoreCase.Checked = StrToBool(xPattern.GetAttribute("ignoreCase"));
             cbRegExMultiLine.Checked = StrToBool(xPattern.GetAttribute("multiLine"));
+            explicitCaptureToolStripMenuItem.Checked = StrToBool(xPattern.GetAttribute("explicitCapture"));
+            compiledToolStripMenuItem.Checked = StrToBool(xPattern.GetAttribute("compiled"));
+            ignorePatternWhitespaceToolStripMenuItem.Checked = StrToBool(xPattern.GetAttribute("ignorePatternWhiteSpace"));
+            rightToLeftToolStripMenuItem.Checked = StrToBool(xPattern.GetAttribute("rightToLeft"));
+            eCMAScriptToolStripMenuItem.Checked = StrToBool(xPattern.GetAttribute("ecmaScript"));
+            cultureInvariantToolStripMenuItem.Checked = StrToBool(xPattern.GetAttribute("cultureInvariant"));
         }
 
         public override void SaveToXml(System.Xml.XmlElement Element)
@@ -89,8 +107,15 @@ namespace RERegex
             base.SaveToXml(Element);
             XmlElement xPattern = Element.OwnerDocument.CreateElement("pattern");
             xPattern.InnerText = txtRegExPattern.Text;
-            xPattern.SetAttribute("ignoreCase",BoolToStr(cbRegExIgnoreCase.Checked));
+            xPattern.SetAttribute("ignoreCase", BoolToStr(cbRegExIgnoreCase.Checked));
             xPattern.SetAttribute("multiLine", BoolToStr(cbRegExMultiLine.Checked));
+            xPattern.SetAttribute("explicitCapture", BoolToStr(explicitCaptureToolStripMenuItem.Checked));
+            xPattern.SetAttribute("compiled", BoolToStr(compiledToolStripMenuItem.Checked));
+            xPattern.SetAttribute("ignorePatternWhiteSpace", BoolToStr(ignorePatternWhitespaceToolStripMenuItem.Checked));
+            xPattern.SetAttribute("rightToLeft", BoolToStr(rightToLeftToolStripMenuItem.Checked));
+            xPattern.SetAttribute("ecmaScript", BoolToStr(eCMAScriptToolStripMenuItem.Checked));
+            xPattern.SetAttribute("cultureInvariant", BoolToStr(cultureInvariantToolStripMenuItem.Checked));
+
             Element.AppendChild(xPattern);
         }
 
@@ -104,6 +129,35 @@ namespace RERegex
             Modified = true;
         }
 
+        private void ignorePatternWhitespaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool b = !ignorePatternWhitespaceToolStripMenuItem.Checked;
+        }
+
+        private void explicitCaptureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            explicitCaptureToolStripMenuItem.Checked = !explicitCaptureToolStripMenuItem.Checked;
+        }
+
+        private void compiledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            compiledToolStripMenuItem.Checked = !compiledToolStripMenuItem.Checked;
+        }
+
+        private void rightToLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rightToLeftToolStripMenuItem.Checked = !rightToLeftToolStripMenuItem.Checked;
+        }
+
+        private void eCMAScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            eCMAScriptToolStripMenuItem.Checked = !eCMAScriptToolStripMenuItem.Checked;
+        }
+
+        private void cultureInvariantToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cultureInvariantToolStripMenuItem.Checked = !cultureInvariantToolStripMenuItem.Checked;
+        }
     }
 }
 
