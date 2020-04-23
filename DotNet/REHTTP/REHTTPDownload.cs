@@ -35,7 +35,10 @@ namespace REHTTP
             base.Start();
             webc = new WebClient();
             if (!lpList.IsConnected)
+            {
+                webc.Encoding = System.Text.Encoding.UTF8;
                 lpOutput.Emit(webc.DownloadString(textBox1.Text));
+            }
         }
 
         public override void Stop()
