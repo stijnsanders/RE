@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Net;
+﻿using System.Net;
 using RE;
 
 namespace REHTTP
 {
-    [REItem("httpdownload","HTTP Download","Get data from a URL")]
+    [REItem("httpdownload", "HTTP Download", "Get data from a URL")]
     public partial class REHTTPDownload : REBaseItem
     {
         public REHTTPDownload()
@@ -28,13 +23,13 @@ namespace REHTTP
             Element.SetAttribute("url", textBox1.Text);
         }
 
-        private WebClient webc;
+        private WebClient? webc;
 
         public override void Start()
         {
             base.Start();
             webc = new WebClient();
-            if (!lpList.IsConnected)
+            if (lpList.ConnectedTo == null)
             {
                 webc.Encoding = System.Text.Encoding.UTF8;
                 lpOutput.Emit(webc.DownloadString(textBox1.Text));
@@ -47,9 +42,14 @@ namespace REHTTP
             webc = null;
         }
 
-        private void lpList_Signal(RELinkPoint Sender, object Data)
+        private void lpList_Signal(RELinkPoint Sender, object? Data)
         {
-            lpOutput.Emit(webc.DownloadString(Data.ToString()));
+            if (webc != null)
+            {
+                var s = Data?.ToString();
+                if(s!=null)
+                lpOutput.Emit(webc.DownloadString(s));
+            }
         }
 
     }

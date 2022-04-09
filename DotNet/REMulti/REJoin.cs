@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -26,7 +23,7 @@ namespace REMulti
                 SuspendLayout();
                 for (int i = inputs.Count; i < value; i++)
                 {
-                    RELinkPoint lp = new RELinkPoint();
+                    RELinkPoint lp = new();
                     panItemClient.Controls.Add(lp);
                     lp.Caption = String.Format("input {0}", i + 1);
                     lp.Key = String.Format("input{0}", i + 1);
@@ -36,8 +33,12 @@ namespace REMulti
                 }
                 for (int i = inputs.Count - 1; i >= value; i--)
                 {
-                    inputs[i].LinkPoint.ConnectedTo = null;
-                    panItemClient.Controls.Remove(inputs[i].LinkPoint);
+                    var l = inputs[i].LinkPoint;
+                    if (l != null)
+                    {
+                        l.ConnectedTo = null;
+                        panItemClient.Controls.Remove(l);
+                    }
                     inputs.RemoveAt(i);
                 }
                 ResumeLayout();
@@ -60,7 +61,7 @@ namespace REMulti
             SequenceIndex = 0;
             OutputSuspended = false;
             PassAsItComes = passAsItComesToolStripMenuItem.Checked;
-            if (lpOutput.IsConnected)
+            if (lpOutput.ConnectedTo != null)
             {
                 foreach (REJoinSlot js in inputs) if (js.Start(this)) OutputSuspended = true;
                 if (OutputSuspended) lpOutput.Suspend();
@@ -70,7 +71,7 @@ namespace REMulti
         public override void Stop()
         {
             //assert !OutputSuspended
-            if (lpOutput.IsConnected)
+            if (lpOutput.ConnectedTo != null)
                 foreach (REJoinSlot js in inputs) js.Stop();
             base.Stop();
         }
@@ -101,7 +102,7 @@ namespace REMulti
             {
                 if (AllowEmit || OutputSuspended)
                 {
-                    object data;
+                    object? data;
                     bool b = inputs[SequenceIndex].IsReady(out data);
                     if (PassAsItComes && !b)
                         do
@@ -110,16 +111,16 @@ namespace REMulti
                             if (SequenceIndex >= inputs.Count) SequenceIndex = 0;
                             b = inputs[SequenceIndex].IsReady(out data);
                         } while (!b && s1 != SequenceIndex);
-                    if (b)
+                    if (b && data != null)
                     {
                         if (AllowEmit)
                             lpOutput.Emit(data, true);
                         else
                             if (OutputSuspended)
-                            {
-                                OutputSuspended = false;
-                                lpOutput.Resume(data);
-                            }
+                        {
+                            OutputSuspended = false;
+                            lpOutput.Resume(data);
+                        }
                         do
                             SequenceIndex++;
                         while (SequenceIndex < inputs.Count && inputs[SequenceIndex].Terminated);
@@ -127,10 +128,10 @@ namespace REMulti
                     }
                     else
                         if (!OutputSuspended)
-                        {
-                            lpOutput.Suspend();
-                            OutputSuspended = true;
-                        }
+                    {
+                        lpOutput.Suspend();
+                        OutputSuspended = true;
+                    }
                 }
             }
         }
@@ -167,10 +168,10 @@ namespace REMulti
 
         private class REJoinSlot
         {
-            private REJoin _owner;
-            private RELinkPoint _linkpoint;
-            private RELinkPoint _lpSeqEnd;
-            private object _data;
+            private REJoin? _owner;
+            private RELinkPoint? _linkpoint;
+            private RELinkPoint? _lpSeqEnd;
+            private object? _data;
             private bool _gotdata;
             private bool _registered;
             private bool _terminated;
@@ -185,7 +186,7 @@ namespace REMulti
                 //other see Start
             }
 
-            public RELinkPoint LinkPoint
+            public RELinkPoint? LinkPoint
             {
                 get { return _linkpoint; }
             }
@@ -201,7 +202,7 @@ namespace REMulti
                 _data = null;
                 _gotdata = false;
                 _registered = false;
-                if (_linkpoint.IsConnected)
+                if (_linkpoint != null && _linkpoint.ConnectedTo != null)
                 {
                     _terminated = false;
                     _lpSeqEnd = new RELinkPoint(_linkpoint.Key + "_sequence_end", _owner);
@@ -220,7 +221,7 @@ namespace REMulti
                 _lpSeqEnd = null;
             }
 
-            void linkpoint_Signal(RELinkPoint Sender, object Data)
+            void linkpoint_Signal(RELinkPoint Sender, object? Data)
             {
                 //assert Sender==_linkpoint
                 if (_owner != null)
@@ -231,31 +232,33 @@ namespace REMulti
                         if (!_registered)
                         {
                             //register for sequence end signal
-                            Sender.Emit(_lpSeqEnd);
+                            if (_lpSeqEnd != null)
+                                Sender.Emit(_lpSeqEnd);
                             _registered = true;
                         }
                         _data = Data;
                         _gotdata = true;
-                        if (!_owner.PassAsItComes) _linkpoint.Suspend();
+                        if (!_owner.PassAsItComes && _linkpoint != null) _linkpoint.Suspend();
                         _owner.CheckOutput(false);
                     }
             }
 
-            void lpSeqEnd_Signal(RELinkPoint Sender, object Data)
+            void lpSeqEnd_Signal(RELinkPoint Sender, object? Data)
             {
                 _registered = false;
                 _terminated = true;
-                _owner.CheckOutput(false);
+                if (_owner != null)
+                    _owner.CheckOutput(false);
             }
 
-            public bool IsReady(out object Data)
+            public bool IsReady(out object? Data)
             {
                 if (_gotdata)
                 {
                     Data = _data;
                     _data = null;
                     _gotdata = false;
-                    if (!_owner.PassAsItComes) _linkpoint.Resume();
+                    if (_owner != null && _linkpoint != null && !_owner.PassAsItComes) _linkpoint.Resume();
                     return true;
                 }
                 else
@@ -273,4 +276,3 @@ namespace REMulti
         }
     }
 }
-

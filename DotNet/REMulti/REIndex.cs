@@ -71,7 +71,7 @@ namespace REMulti
             //TODO: support comma-separated list of numbers and ranges?
             if(indexcount)
             {
-                if (lpCount.IsConnected)
+                if (lpCount.ConnectedTo != null)
                     throw new Exception("[index]Don't connect count and specify a range");
                 indexvalue = Convert.ToInt32(x[0].Trim());
                 indexmax = Convert.ToInt32(x[1].Trim());

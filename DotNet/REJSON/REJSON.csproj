@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <BaseOutputPath>..\bin\</BaseOutputPath>
+    <ApplicationIcon>reData.ico</ApplicationIcon>
+    <AssemblyVersion>2.1.0.646</AssemblyVersion>
+    <FileVersion>2.1.0.646</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="reData.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RELib\RELib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="REEnumArray.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="REJsonKeyValue.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

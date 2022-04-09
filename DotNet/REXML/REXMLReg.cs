@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using RE;
@@ -26,16 +23,22 @@ namespace REXML
             return ri;
         }
 
-        public static XmlNode AsXmlNode(object Data)
+        public static XmlNode? AsXmlNode(object? Data)
         {
-            if (Data is XmlNode)
-                return Data as XmlNode;
-            else
+            var n = Data as XmlNode;
+            if (n != null)
+                return n;
+            else if (Data != null)
             {
-                XmlDocument xdoc = new XmlDocument();
-                xdoc.LoadXml(Data.ToString());
-                return xdoc as XmlNode;//.DocumentElement?
+                var s = Data.ToString();
+                if (s != null)
+                {
+                    XmlDocument xdoc = new XmlDocument();
+                    xdoc.LoadXml(s);
+                    return xdoc as XmlNode;//.DocumentElement?
+                }
             }
+            return null; //default
         }
     }
 }

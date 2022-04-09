@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using RE;
 
 namespace RERegex
 {
-    [RE.REItem("split","Split","Split text using a regular expression")]
+    [RE.REItem("split", "Split", "Split text using a regular expression")]
     public partial class RESplit : REBaseRegExItem
     {
         public RESplit()
@@ -18,8 +12,8 @@ namespace RERegex
         }
 
         private bool IsSplitting;
-        private string SplitData;
-        private MatchCollection SplitList;
+        private string? SplitData;
+        private MatchCollection? SplitList;
         private int SplitIndex;
         private int SplitPosition;
 
@@ -41,7 +35,7 @@ namespace RERegex
 
         void lpRegExInput_Signal(RELinkPoint Sender, object Data)
         {
-            if (lpInbetweens.IsConnected || lpMatches.IsConnected)
+            if (lpInbetweens.ConnectedTo != null || lpMatches.ConnectedTo != null)
             {
                 if (IsSplitting)
                     throw new EReUnexpectedInputException(lpRegExInput);
@@ -50,9 +44,10 @@ namespace RERegex
                     SplitIndex = 0;
                     SplitPosition = 0;
                     SplitData = Data.ToString();
-                    SplitList = ItemRegex.Matches(SplitData);
+                    if (SplitData != null)
+                        SplitList = ItemRegex.Matches(SplitData);
                     IsSplitting = true;
-                    if(lpInbetweens.IsConnected)
+                    if (lpInbetweens.ConnectedTo != null)
                         NextInbetween();
                     else
                         NextMatch();
@@ -62,7 +57,7 @@ namespace RERegex
 
         void lpInbetweens_Signal(RELinkPoint Sender, object Data)
         {
-            if (lpMatches.IsConnected)
+            if (lpMatches.ConnectedTo != null)
                 NextMatch();
             else
             {
@@ -73,7 +68,7 @@ namespace RERegex
 
         void lpMatches_Signal(RELinkPoint Sender, object Data)
         {
-            if (lpInbetweens.IsConnected)
+            if (lpInbetweens.ConnectedTo != null)
                 NextInbetween();
             else
                 NextMatch();
@@ -81,7 +76,7 @@ namespace RERegex
 
         private void NextInbetween()
         {
-            if(IsSplitting)
+            if (IsSplitting && SplitData != null && SplitList != null)
                 if (SplitIndex < SplitList.Count)
                 {
                     int npos = SplitList[SplitIndex].Index;
@@ -99,7 +94,7 @@ namespace RERegex
 
         private void NextMatch()
         {
-            if (SplitIndex < SplitList.Count)
+            if (SplitList != null && SplitIndex < SplitList.Count)
             {
                 //string Data=SplitData.Substring(...
                 lpMatches.Emit(SplitList[SplitIndex].Value, true);
@@ -111,10 +106,12 @@ namespace RERegex
 
         private void Advance()
         {
-            //assert SplitIndex < SplitList.Count
-            SplitPosition = SplitList[SplitIndex].Index + SplitList[SplitIndex].Length;
-            SplitIndex++;
+            if (SplitList != null)
+            {
+                //assert SplitIndex < SplitList.Count
+                SplitPosition = SplitList[SplitIndex].Index + SplitList[SplitIndex].Length;
+                SplitIndex++;
+            }
         }
     }
 }
-

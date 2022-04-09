@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Net;
 using RE;
 
@@ -31,9 +27,9 @@ namespace REHTTP
             Element.SetAttribute("url", textBox1.Text);
         }
 
-        private WebClient webc;
-        private object listdata;
-        private String listurl;
+        private WebClient? webc;
+        private object? listdata;
+        private String? listurl;
 
         public override void Start()
         {
@@ -54,19 +50,26 @@ namespace REHTTP
 
         private void lpInput_Signal(RELinkPoint Sender, object Data)
         {
-            if (lpList.ConnectedTo == null)
-                lpOutput.Emit(webc.UploadString(textBox1.Text, Data.ToString()));
-            else
-            {
-                listdata = Data;
-                if (listurl != null) lpOutput.Emit(webc.UploadString(listurl, listdata.ToString()));
-            }
+            if (webc != null)
+                if (lpList.ConnectedTo == null)
+                {
+                    var s = Data.ToString();
+                    if (s != null)
+                        lpOutput.Emit(webc.UploadString(textBox1.Text, s));
+                }
+                else
+                {
+                    listdata = Data;
+                    var s = listdata.ToString();
+                    if (s != null && listurl != null) lpOutput.Emit(webc.UploadString(listurl, s));
+                }
         }
 
-        private void lpList_Signal(RELinkPoint Sender, object Data)
+        private void lpList_Signal(RELinkPoint Sender, object? Data)
         {
-            listurl = Data.ToString();
-            if (listdata != null) lpOutput.Emit(webc.UploadString(listurl, listdata.ToString()));
+            listurl = Data?.ToString();
+            var s = listdata?.ToString();
+            if (webc != null && listurl != null && s != null) lpOutput.Emit(webc.UploadString(listurl, s));
         }
 
         protected override void DisconnectAll()

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using RE;
@@ -20,7 +17,7 @@ namespace REBasic
         public override void LoadFromXml(XmlElement Element)
         {
             base.LoadFromXml(Element);
-            XmlElement c=Element.SelectSingleNode("comment") as XmlElement;
+            XmlElement? c=Element.SelectSingleNode("comment") as XmlElement;
             if (c != null)
             {
                 textBox1.Text = c.InnerText;
@@ -43,12 +40,14 @@ namespace REBasic
             Element.AppendChild(c);
         }
 
-        private void toggleToolStripMenuItem(object sender, EventArgs e)
+        private void toggleToolStripMenuItem(object? sender, EventArgs e)
         {
-            (sender as ToolStripMenuItem).Checked = !(sender as ToolStripMenuItem).Checked;
+            var m = sender as ToolStripMenuItem;
+            if (m != null)
+                m.Checked = !m.Checked;
         }
 
-        private void boldToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void boldToolStripMenuItem_CheckedChanged(object? sender, EventArgs e)
         {
             FontStyle fs = textBox1.Font.Style;
             if(boldToolStripMenuItem.Checked)
@@ -58,7 +57,7 @@ namespace REBasic
             textBox1.Font = new Font(textBox1.Font, fs);
         }
 
-        private void italicToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void italicToolStripMenuItem_CheckedChanged(object? sender, EventArgs e)
         {
             FontStyle fs = textBox1.Font.Style;
             if (italicToolStripMenuItem.Checked)
@@ -68,7 +67,7 @@ namespace REBasic
             textBox1.Font = new Font(textBox1.Font, fs);
         }
 
-        private void underlineToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void underlineToolStripMenuItem_CheckedChanged(object? sender, EventArgs e)
         {
             FontStyle fs = textBox1.Font.Style;
             if (underlineToolStripMenuItem.Checked)
@@ -78,7 +77,7 @@ namespace REBasic
             textBox1.Font = new Font(textBox1.Font, fs);
         }
 
-        private void readonlyToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void readonlyToolStripMenuItem_CheckedChanged(object? sender, EventArgs e)
         {
             textBox1.ReadOnly = readonlyToolStripMenuItem.Checked;
         }

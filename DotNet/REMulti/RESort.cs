@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -27,7 +23,7 @@ namespace REMulti
             ignoreCaseToolStripMenuItem.Checked = StrToBool(Element.GetAttribute("ignorecase"));
             numericToolStripMenuItem.Checked = StrToBool(Element.GetAttribute("numeric"));
             descendingToolStripMenuItem.Checked = StrToBool(Element.GetAttribute("descending"));
-            allowDuplicatesToolStripMenuItem.Checked=StrToBool(Element.GetAttribute("allowduplicates"));
+            allowDuplicatesToolStripMenuItem.Checked = StrToBool(Element.GetAttribute("allowduplicates"));
         }
 
         public override void SaveToXml(System.Xml.XmlElement Element)
@@ -40,10 +36,10 @@ namespace REMulti
         }
 
         private bool _preparing;
-        private object _prepareData;
+        private object? _prepareData;
         private bool _outputting;
-        private SortedDictionary<string, object> _data;
-        private List<object> _outputData;
+        private SortedDictionary<string, object>? _data;
+        private List<object>? _outputData;
         private int _outputIndex;
         private bool _registered;
 
@@ -62,7 +58,7 @@ namespace REMulti
             private bool _descending;
             private bool _allowdup;
 
-            public override int Compare(string x, string y)
+            public override int Compare(string? x, string? y)
             {
                 int r;
                 if (_numeric)
@@ -73,9 +69,9 @@ namespace REMulti
                         r = -1;
                     else
                         if (a == b)
-                            r = 0;
-                        else
-                            r = 1;
+                        r = 0;
+                    else
+                        r = 1;
                 }
                 else
                     r = String.Compare(x, y, _ignorecase);
@@ -106,62 +102,70 @@ namespace REMulti
             if (_preparing || _outputting)
                 throw new EReUnexpectedInputException(lpInput);
             else
-                if (lpOutput.IsConnected)
+                if (lpOutput.ConnectedTo != null)
+            {
+                if (!_registered)
                 {
-                    if (!_registered)
-                    {
-                        //register sequence end
-                        lpOutput.Emit(lpOutput);
-                        _registered = true;
-                    }
-                    if (_data == null)
-                        _data = new SortedDictionary<string, object>(new RESortComparer(
-                            ignoreCaseToolStripMenuItem.Checked,
-                            numericToolStripMenuItem.Checked,
-                            descendingToolStripMenuItem.Checked,
-                            allowDuplicatesToolStripMenuItem.Checked));
-                    if (lpPrepare.IsConnected)
-                    {
-                        _preparing = true;
-                        _prepareData = Data;
-                        lpPrepare.Emit(Data, true);
-                    }
-                    else
-                        _data.Add(Data.ToString(), Data);
+                    //register sequence end
+                    lpOutput.Emit(lpOutput);
+                    _registered = true;
                 }
+                if (_data == null)
+                    _data = new SortedDictionary<string, object>(new RESortComparer(
+                        ignoreCaseToolStripMenuItem.Checked,
+                        numericToolStripMenuItem.Checked,
+                        descendingToolStripMenuItem.Checked,
+                        allowDuplicatesToolStripMenuItem.Checked));
+                if (lpPrepare.ConnectedTo != null)
+                {
+                    _preparing = true;
+                    _prepareData = Data;
+                    lpPrepare.Emit(Data, true);
+                }
+                else if (Data != null)
+                {
+                    var s = Data.ToString();
+                    if (s != null)
+                        _data.Add(s, Data);
+                }
+            }
         }
 
-        private void lpSortBy_Signal(RELinkPoint Sender, object Data)
+        private void lpSortBy_Signal(RELinkPoint Sender, object? Data)
         {
             if (_preparing)
             {
                 _preparing = false;
-                _data.Add(Data.ToString(), _prepareData);
+                if (_data != null && Data != null && _prepareData != null)
+                {
+                    var s = Data.ToString();
+                    if (s != null)
+                        _data.Add(s, _prepareData);
+                }
                 _prepareData = null;
             }
             else
                 throw new EReUnexpectedInputException(lpSortBy);
         }
 
-        private void lpOutput_Signal(RELinkPoint Sender, object Data)
+        private void lpOutput_Signal(RELinkPoint Sender, object? Data)
         {
             if (_outputting)
                 OutputNext();
+            else if (_preparing || _data == null)
+                throw new EReUnexpectedInputException(lpOutput);
             else
-                if (_preparing)
-                    throw new EReUnexpectedInputException(lpOutput);
-                else
-                {
-                    _registered = false;
-                    _outputting = true;
-                    _outputIndex = 0;
-                    _outputData = new List<object>(_data.Values);
-                    _data = null;
-                    OutputNext();
-                }
+            {
+                _registered = false;
+                _outputting = true;
+                _outputIndex = 0;
+                _outputData = new List<object>(_data.Values);
+                _data = null;
+                OutputNext();
+            }
         }
 
-        private void lpPrepare_Signal(RELinkPoint Sender, object Data)
+        private void lpPrepare_Signal(RELinkPoint Sender, object? Data)
         {
             if (_preparing)
             {
@@ -174,7 +178,7 @@ namespace REMulti
         private void OutputNext()
         {
             //assert _outputting
-            if (_outputIndex < _outputData.Count)
+            if (_outputData != null && _outputIndex < _outputData.Count)
             {
                 lpOutput.Emit(_outputData[_outputIndex], true);
                 _outputIndex++;
@@ -183,25 +187,25 @@ namespace REMulti
                 _outputting = false;
         }
 
-        private void ignoreCaseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ignoreCaseToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             ignoreCaseToolStripMenuItem.Checked = !ignoreCaseToolStripMenuItem.Checked;
             Modified = true;
         }
 
-        private void numericToolStripMenuItem_Click(object sender, EventArgs e)
+        private void numericToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             numericToolStripMenuItem.Checked = !numericToolStripMenuItem.Checked;
             Modified = true;
         }
 
-        private void descendingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void descendingToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             descendingToolStripMenuItem.Checked = !descendingToolStripMenuItem.Checked;
             Modified = true;
         }
 
-        private void allowDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void allowDuplicatesToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             allowDuplicatesToolStripMenuItem.Checked = !allowDuplicatesToolStripMenuItem.Checked;
             Modified = true;

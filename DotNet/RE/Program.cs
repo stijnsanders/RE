@@ -1,17 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace RE
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new REMainForm());

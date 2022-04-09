@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Xml;
-using RE;
+﻿using RE;
 
 namespace REXML
 {
@@ -16,7 +10,7 @@ namespace REXML
             InitializeComponent();
         }
 
-        private System.Collections.IEnumerator list;
+        private System.Collections.IEnumerator? list;
 
         public override void Start()
         {
@@ -32,19 +26,22 @@ namespace REXML
 
         private void SendNext()
         {
-            if (list.MoveNext())
+            if (list!=null && list.MoveNext())
                 lpOutput.Emit(list.Current, true);
             else
                 list = null;
         }
 
-        private void lpInput_Signal(RELinkPoint Sender, object Data)
+        private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
-            list = REXML.AsXmlNode(Data).ChildNodes.GetEnumerator();
-            SendNext();
+            if (Data != null)
+            {
+                list = REXML.AsXmlNode(Data)?.ChildNodes.GetEnumerator();
+                SendNext();
+            }
         }
 
-        private void lpOutput_Signal(RELinkPoint Sender, object Data)
+        private void lpOutput_Signal(RELinkPoint Sender, object? Data)
         {
             SendNext();
         }

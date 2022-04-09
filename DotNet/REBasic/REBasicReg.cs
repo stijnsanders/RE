@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using RE;
 using System.Windows.Forms;
+using RE;
 
 namespace REBasic
 {

@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Xml;
+using RE;
 
 namespace REBasic
 {
-    [RE.REItem("const","Constant value","Outputs a constant value")]
+    [REItem("const","Constant value","Outputs a constant value")]
     public partial class REConstant : RE.REBaseItem
     {
         public REConstant()
@@ -19,7 +15,7 @@ namespace REBasic
         public override void LoadFromXml(System.Xml.XmlElement Element)
         {
             base.LoadFromXml(Element);
-            XmlElement value = Element.SelectSingleNode("value") as XmlElement;
+            XmlElement? value = Element.SelectSingleNode("value") as XmlElement;
             if (value != null)
             {
                 textBox1.Text = value.InnerText;

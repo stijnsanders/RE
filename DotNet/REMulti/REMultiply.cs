@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -11,7 +8,7 @@ namespace REMulti
     [REItem("multiply", "Multiply", "Multiplies a single input")]
     public partial class REMultiply : RE.REBaseItem
     {
-        private List<RELinkPoint> outputs = new List<RELinkPoint>();
+        private List<RELinkPoint> outputs = new();
 
         public REMultiply()
         {
@@ -76,15 +73,15 @@ namespace REMulti
         private bool inputdone;
         private int waitingcount;
         private int workingcount;
-        private RELinkPoint inputSeqEnd;
+        private RELinkPoint? inputSeqEnd;
 
         public override void Start()
         {
             base.Start();
             waitingcount = 0;
-            if (lpInput.IsConnected)
+            if (lpInput.ConnectedTo != null)
                 foreach (RELinkPoint lp in outputs)
-                    if (lp.IsConnected)
+                    if (lp.ConnectedTo != null)
                     {
                         waitingcount++;
                         lp.Suspend();
@@ -106,39 +103,40 @@ namespace REMulti
             if (inputdone)
             {
                 inputdone = false;
-                lpInput.Emit(inputSeqEnd);
+                if (inputSeqEnd != null)
+                    lpInput.Emit(inputSeqEnd);
             }
             if (Data != null)
             {
                 if (workingcount != 0)
                     throw new EReUnexpectedInputException(lpInput);
                 foreach (RELinkPoint lp in outputs)
-                    if (lp.IsConnected)
+                    if (lp.ConnectedTo != null)
                         lp.Resume(Data);
                 workingcount = waitingcount;
-                lpInput.ConnectedTo.Suspend();
+                if (lpInput.ConnectedTo != null)
+                    lpInput.ConnectedTo.Suspend();
             }
         }
 
-        void lp_Signal(RELinkPoint Sender, object Data)
+        void lp_Signal(RELinkPoint Sender, object? Data)
         {
             if (!inputdone)
             {
                 Sender.Suspend();
                 workingcount--;
-                if (workingcount == 0)
+                if (workingcount == 0 && lpInput.ConnectedTo != null)
                     lpInput.ConnectedTo.Resume();
             }
         }
 
-        void inputSeqEnd_Signal(RELinkPoint Sender, object Data)
+        void inputSeqEnd_Signal(RELinkPoint Sender, object? Data)
         {
             inputdone = true;
             foreach (RELinkPoint lp in outputs)
-                if (lp.IsConnected)
+                if (lp.ConnectedTo != null)
                     lp.Resume();
         }
 
     }
 }
-

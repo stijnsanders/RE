@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -38,7 +35,8 @@ namespace REMulti
                 }
                 for (int i = inputs.Count - 1; i >= value; i--)
                 {
-                    inputs[i].LinkPoint.ConnectedTo = null;
+                    var l = inputs[i].LinkPoint;
+                    if (l != null) l.ConnectedTo = null;
                     panItemClient.Controls.Remove(inputs[i].LinkPoint);
                     inputs.RemoveAt(i);
                 }
@@ -79,17 +77,16 @@ namespace REMulti
             {
                 if (AllowEmit || OutputSuspended)
                 {
-                    object data;
-                    if (inputs[SequenceIndex].IsReady(out data))
+                    object? data;
+                    if (inputs[SequenceIndex].IsReady(out data) && data != null)
                     {
                         if (AllowEmit)
                             lpOutput.Emit(data, true);
-                        else
-                            if (OutputSuspended)
-                            {
-                                OutputSuspended = false;
-                                lpOutput.Resume(data);
-                            }
+                        else if (OutputSuspended)
+                        {
+                            OutputSuspended = false;
+                            lpOutput.Resume(data);
+                        }
                     }
                     else
                     {
@@ -101,15 +98,14 @@ namespace REMulti
                     }
                 }
             }
-            else
-                if (OutputSuspended)
-                {
-                    OutputSuspended = false;
-                    lpOutput.Resume();
-                }
+            else if (OutputSuspended)
+            {
+                OutputSuspended = false;
+                lpOutput.Resume();
+            }
         }
 
-        void lpOutput_Signal(RELinkPoint Sender, object Data)
+        void lpOutput_Signal(RELinkPoint Sender, object? Data)
         {
             CheckOutput(true);
         }
@@ -138,10 +134,10 @@ namespace REMulti
 
         private class RESequenceSlot
         {
-            private RESequence _owner;
-            private RELinkPoint _linkpoint;
-            private RELinkPoint _lpSeqEnd;
-            private object _data;
+            private RESequence? _owner;
+            private RELinkPoint? _linkpoint;
+            private RELinkPoint? _lpSeqEnd;
+            private object? _data;
             private bool _registered;
             private bool _terminated;
             private bool _suspended;
@@ -154,7 +150,7 @@ namespace REMulti
                 _data = null;
             }
 
-            public RELinkPoint LinkPoint
+            public RELinkPoint? LinkPoint
             {
                 get { return _linkpoint; }
             }
@@ -170,7 +166,7 @@ namespace REMulti
                 _registered = false;
                 _suspended = false;
                 _data = null;
-                if (_linkpoint.IsConnected)
+                if (_linkpoint != null && _linkpoint.ConnectedTo != null)
                 {
                     _terminated = false;
                     _lpSeqEnd = new RELinkPoint(_linkpoint.Key + "_sequence_end", _owner);
@@ -189,7 +185,7 @@ namespace REMulti
                 _lpSeqEnd = null;
             }
 
-            void _linkpoint_Signal(RELinkPoint Sender, object Data)
+            void _linkpoint_Signal(RELinkPoint Sender, object? Data)
             {
                 //assert _linkpoint==Sender
                 if (_terminated)
@@ -200,28 +196,32 @@ namespace REMulti
                     if (!_registered)
                     {
                         //register for sequence end signal
-                        Sender.Emit(_lpSeqEnd);
+                        if (_lpSeqEnd != null)
+                            Sender.Emit(_lpSeqEnd);
                         _registered = true;
                     }
                     _data = Data;
                     _suspended = true;
                     Sender.Suspend();
-                    _owner.CheckOutput(false);
+                    if (_owner != null)
+                        _owner.CheckOutput(false);
                 }
             }
 
-            void _lpSeqEnd_Signal(RELinkPoint Sender, object Data)
+            void _lpSeqEnd_Signal(RELinkPoint Sender, object? Data)
             {
                 _registered = false;
                 _terminated = true;
-                _owner.CheckOutput(false);
+                if (_owner != null)
+                    _owner.CheckOutput(false);
             }
 
-            public bool IsReady(out object Data)
+            public bool IsReady(out object? Data)
             {
                 if (_suspended)
                 {
-                    _linkpoint.Resume();
+                    if (_linkpoint != null)
+                        _linkpoint.Resume();
                     _suspended = false;
                     Data = _data;
                     _data = null;
@@ -236,4 +236,3 @@ namespace REMulti
         }
     }
 }
-

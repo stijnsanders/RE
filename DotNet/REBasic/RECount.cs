@@ -1,22 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using RE;
 
 namespace REBasic
 {
-    [RE.REItem("count","Count","Count number of items passed.")]
-    public partial class RECount : RE.REBaseItem
+    [REItem("count","Count","Count number of items passed.")]
+    public partial class RECount : REBaseItem
     {
         private int scount;
-        private RE.RELinkPointPatch patch;
+        private RELinkPointPatch patch;
 
         public RECount()
         {
             InitializeComponent();
-            patch = new RE.RELinkPointPatch(lpInput, lpOutput);
+            patch = new RELinkPointPatch(lpInput, lpOutput);
         }
 
         public override void Start()
@@ -26,7 +21,7 @@ namespace REBasic
             textBox1.Text = scount.ToString();
         }
 
-        void lpInput_Signal(RE.RELinkPoint Sender, object Data)
+        void lpInput_Signal(RELinkPoint Sender, object Data)
         {
             scount++;
             textBox1.Text = scount.ToString();

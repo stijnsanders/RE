@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{9DA5420E-0943-4839-B1EE-844B9EC01336}
 AppName=Regular Expression
-AppVerName=Regular Expression 2.0.3.614
+AppVerName=Regular Expression 2.0.4.640
 AppPublisher=Double Sigma Programming
 AppPublisherURL=http://yoy.be/re
 AppSupportURL=http://yoy.be/re
@@ -36,7 +36,8 @@ Source: "DotNet\bin\Release\RERegex.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\bin\Release\REMulti.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\bin\Release\REFileSystem.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\bin\Release\REXML.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "DotNet\bin\Release\REHTTP.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\REJSON.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\REHTTP.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\WhatsNew.txt"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

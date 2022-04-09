@@ -1,25 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using RE;
 
 namespace REBasic
 {
-    public /*abstract*/ partial class REBaseStringOp : RE.REBaseItem
+    public /*abstract*/ partial class REBaseStringOp : REBaseItem
     {
-        private RE.RELinkPointPatch patch;
+        private RELinkPointPatch patch;
 
         public REBaseStringOp()
         {
             InitializeComponent();
-            patch = new RE.RELinkPointPatch(lpInput, lpOutput);
+            patch = new RELinkPointPatch(lpInput, lpOutput);
         }
 
         private void lpInput_Signal(RE.RELinkPoint Sender, object Data)
         {
-            lpOutput.Emit(Perform(Data.ToString()));
+            var d = Data.ToString();
+            if (d != null)
+                lpOutput.Emit(Perform(d));
         }
 
         protected virtual string Perform(string Data)

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using RE;
@@ -12,7 +10,7 @@ namespace RERegex
     [RE.REItem("groups", "Groups", "Using a regular expression to separate text into match groups")]
     public partial class REGroups : REBaseRegExItem
     {
-        private List<RELinkPoint> outputs = new List<RELinkPoint>();
+        private List<RELinkPoint> outputs = new();
 
         public REGroups()
         {
@@ -20,7 +18,7 @@ namespace RERegex
             UpdateGroups();
         }
 
-        void txtRegExPattern_TextChanged(object sender, EventArgs e)
+        void txtRegExPattern_TextChanged(object? sender, EventArgs e)
         {
             UpdateGroups();
         }
@@ -78,14 +76,14 @@ namespace RERegex
         }
 
         private bool IsGrouping;
-        private string GroupData;
-        private MatchCollection GroupList;
+        private string? GroupData;
+        private MatchCollection? GroupList;
         private int GroupIndex;
         private int GroupPosition;
         private bool inputdone;
         private int waitingcount;
         private int workingcount;
-        private RELinkPoint inputSeqEnd;
+        private RELinkPoint? inputSeqEnd;
 
         public override void Start()
         {
@@ -93,14 +91,14 @@ namespace RERegex
             IsGrouping = false;
             base.Start();
             waitingcount = 0;
-            if (lpInbetweens.IsConnected)
+            if (lpInbetweens.ConnectedTo != null)
             {
                 waitingcount++;
                 lpInbetweens.Suspend();
             }
-            if (lpRegExInput.IsConnected)
+            if (lpRegExInput.ConnectedTo != null)
                 foreach (RELinkPoint lp in outputs)
-                    if (lp.IsConnected)
+                    if (lp.ConnectedTo != null)
                     {
                         waitingcount++;
                         lp.Suspend();
@@ -127,7 +125,8 @@ namespace RERegex
             if (inputdone)
             {
                 inputdone = false;
-                lpRegExInput.Emit(inputSeqEnd);
+                if (inputSeqEnd != null)
+                    lpRegExInput.Emit(inputSeqEnd);
             }
             if (Data != null && waitingcount != 0)
             {
@@ -138,7 +137,8 @@ namespace RERegex
                     GroupIndex = 0;
                     GroupPosition = 0;
                     GroupData = Data.ToString();
-                    GroupList = ItemRegex.Matches(GroupData);
+                    if (GroupData != null)
+                        GroupList = ItemRegex.Matches(GroupData);
                     lpRegExInput.Suspend();
                     IsGrouping = true;
                     NextGroup();
@@ -146,7 +146,7 @@ namespace RERegex
             }
         }
 
-        private void lpMatch_Signal(RELinkPoint Sender, object Data)
+        private void lpMatch_Signal(RELinkPoint Sender, object? Data)
         {
             if (!inputdone)
                 if (workingcount == 0)
@@ -165,26 +165,26 @@ namespace RERegex
                 }
         }
 
-        void inputSeqEnd_Signal(RELinkPoint Sender, object Data)
+        void inputSeqEnd_Signal(RELinkPoint Sender, object? Data)
         {
             inputdone = true;
             foreach (RELinkPoint lp in outputs)
-                if (lp.IsConnected)
+                if (lp.ConnectedTo != null)
                     lp.Resume();
-            if (lpInbetweens.IsConnected)
+            if (lpInbetweens.ConnectedTo != null)
                 lpInbetweens.Resume();
         }
 
         private void NextGroup()
         {
-            if (IsGrouping)
+            if (IsGrouping && GroupData != null && GroupList != null)
                 if (GroupIndex < GroupList.Count)
                 {
                     Match m = GroupList[GroupIndex];
-                    if (lpInbetweens.IsConnected)
+                    if (lpInbetweens.ConnectedTo != null)
                         lpInbetweens.Resume(GroupData.Substring(GroupPosition, m.Index - GroupPosition));
                     for (int i = 0; i < outputs.Count; i++)
-                        if (outputs[i].IsConnected)
+                        if (outputs[i].ConnectedTo != null)
                             outputs[i].Resume(m.Groups[i].Value);
                     workingcount = waitingcount;
                     //advance
@@ -194,7 +194,7 @@ namespace RERegex
                 else
                 {
                     //trailing bit
-                    if (lpInbetweens.IsConnected)
+                    if (lpInbetweens.ConnectedTo != null)
                     {
                         lpInbetweens.Resume(GroupData.Substring(GroupPosition));
                         workingcount = 1;

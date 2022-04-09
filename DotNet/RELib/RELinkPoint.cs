@@ -1,27 +1,25 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace RE
 {
     public enum RELinkPointDirection { Unknown, Input, Output };
 
-    public delegate void RELinkPointSignal(RELinkPoint Sender, object Data);
+    public delegate void RELinkPointSignal(RELinkPoint Sender, object? Data);
 
     public delegate void RELinkPointConnecting(RELinkPoint Sender, RELinkPoint ConnectingTo);
 
     public partial class RELinkPoint : UserControl
     {
-        private RELinkPoint connectedTo = null;
+        private RELinkPoint? connectedTo = null;
         private Color conColor = Color.Transparent;
         private bool isReconnecting = false;
         private RELinkPointDirection direction = RELinkPointDirection.Unknown;
         private string caption = "";
         private string key = "";
-        private REBaseItem ownerItem = null;
+        private REBaseItem? ownerItem = null;
 
         public RELinkPoint()
         {
@@ -84,10 +82,14 @@ namespace RE
         {
             get
             {
-                Control c = Parent;
+                Control? c = Parent;
                 if (c == null) c = ownerItem;
                 while (c != null && !(c is IRELinkPanel)) c = c.Parent;
-                return c as IRELinkPanel;
+                var p = c as IRELinkPanel;
+                if (p != null)
+                    return p;
+                else
+                    throw new Exception("Unable to obtain LinkPanel reference");
             }
         }
 
@@ -95,9 +97,13 @@ namespace RE
         {
             get
             {
-                Control c = Parent;
+                Control? c = Parent;
                 while (!(c == null || c is REBaseItem)) c = c.Parent;
-                return c as REBaseItem;
+                REBaseItem? b = c as REBaseItem;
+                if (b != null)
+                    return b;
+                else
+                    throw new Exception("Unable to obtain BaseItem reference");
             }
         }
 
@@ -111,7 +117,7 @@ namespace RE
             //connectedTo = null; ??caller should do this (hence private)
         }
 
-        public RELinkPoint ConnectedTo
+        public RELinkPoint? ConnectedTo
         {
             get
             {
@@ -124,7 +130,7 @@ namespace RE
                     isReconnecting = true;
                     try
                     {
-                        if (Connecting != null) Connecting(this, value);
+                        if (Connecting != null && value != null) Connecting(this, value);
                         Disconnect();
                         connectedTo = value;
                         if (connectedTo != null)
@@ -194,7 +200,7 @@ namespace RE
             base.OnDragEnter(drgevent);
             drgevent.Effect = DragDropEffects.None;//default not allowed!
             //if(drgevent.Data.GetDataPresent(typeof(ucLinkPoint)))??
-            RELinkPoint Item = drgevent.Data.GetData(typeof(RELinkPoint)) as RELinkPoint;
+            RELinkPoint? Item = drgevent.Data.GetData(typeof(RELinkPoint)) as RELinkPoint;
             if (Item != null)
             {
                 if (Item == this || (
@@ -204,7 +210,7 @@ namespace RE
                     ) || (
                     ((direction == RELinkPointDirection.Input && Item.Direction == RELinkPointDirection.Input) ||
                     (direction == RELinkPointDirection.Output && Item.Direction == RELinkPointDirection.Output)) &&
-                    Item.IsConnected
+                    Item.ConnectedTo != null
                     ))
                     drgevent.Effect = drgevent.AllowedEffect;
             }
@@ -215,14 +221,13 @@ namespace RE
             base.OnDragDrop(drgevent);
             //assert(FLinkPanel!=null)
             //Connection=;
-            RELinkPoint lp = drgevent.Data.GetData(typeof(RELinkPoint)) as RELinkPoint;
-            if (lp == this)
+            RELinkPoint? lp = drgevent.Data.GetData(typeof(RELinkPoint)) as RELinkPoint;
+            if (lp == null || lp == this)
                 ConnectedTo = null;
+            else if (direction == lp.Direction)
+                ConnectedTo = lp.connectedTo;
             else
-                if (direction == lp.Direction)
-                    ConnectedTo = lp.connectedTo;
-                else
-                    ConnectedTo = lp;
+                ConnectedTo = lp;
         }
 
         [Category("Appearance"), Description("Text label to display on the link point")]
@@ -259,8 +264,6 @@ namespace RE
             set { direction = value; }
         }
 
-        public bool IsConnected { get { return connectedTo != null; } }
-
         public void Emit(object Data)
         {
             Emit(Data, false);
@@ -290,13 +293,13 @@ namespace RE
         }
 
         [Browsable(true), Category("Behavior"), Description("Event fired when action is required from the linkpoint when performing.")]
-        public event RELinkPointSignal Signal;
+        public event RELinkPointSignal? Signal;
 
         [Browsable(true), Category("Behavior"), Description("Event fired when a linkpoint is about to get connected to another linkpoint.")]
-        public event RELinkPointConnecting Connecting;
+        public event RELinkPointConnecting? Connecting;
 
         [Description("Don't call FireSignal yourself. It is used internally when performing. Use Emit and handle Signal events fired for you.")]
-        public void FireSignal(object Data)
+        public void FireSignal(object? Data)
         {
             if (Signal != null) Signal(this, Data);
         }

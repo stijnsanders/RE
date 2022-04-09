@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using System.Xml.Xsl;
 using RE;
 
 namespace REXML
 {
-    [REItem("xslttransform","Xslt Transform","Perform an XSLT transformation on node or document")]
+    [REItem("xslttransform", "Xslt Transform", "Perform an XSLT transformation on node or document")]
     public partial class REXsltTransform : REBaseItem
     {
         public REXsltTransform()
@@ -18,9 +13,9 @@ namespace REXML
             InitializeComponent();
         }
 
-        private XslCompiledTransform transform;
+        private XslCompiledTransform? transform;
         private bool inputsuspended;
-        private object inputdata;
+        private object? inputdata;
 
         public override void Start()
         {
@@ -35,46 +30,57 @@ namespace REXML
             transform = null;
         }
 
-        private void lpXSLT_Signal(RELinkPoint Sender, object Data)
+        private void lpXSLT_Signal(RELinkPoint Sender, object? Data)
         {
             //if(transform!=0) throw EReUnexpectedInputException?
-            transform = new XslCompiledTransform();
-            transform.Load(REXML.AsXmlNode(Data));
-            if (inputsuspended)
+            if (Data != null)
             {
-                lpInput.ConnectedTo.Resume(inputdata);
-                inputsuspended = false;
-                inputdata = null;
+                var x = REXML.AsXmlNode(Data);
+                if (x != null)
+                {
+                    transform = new XslCompiledTransform();
+                    transform.Load(x);
+                    if (inputsuspended && inputdata != null && lpInput.ConnectedTo != null)
+                    {
+                        lpInput.ConnectedTo.Resume(inputdata);
+                        inputsuspended = false;
+                        inputdata = null;
+                    }
+                }
             }
         }
 
-        private void lpInput_Signal(RELinkPoint Sender, object Data)
+        private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
-            XmlNode x=REXML.AsXmlNode(Data);
-            if (lpXSLT.IsConnected)
+            if (Data != null)
             {
-                if (transform == null)
-                {
-                    inputdata = Data;
-                    inputsuspended = true;
-                    lpInput.ConnectedTo.Suspend();
-                }
-                else
-                {
-                    MemoryStream m=new MemoryStream();
-                    XsltArgumentList al = new XsltArgumentList();
-                    //TODO: fill argumentlist?
-                    transform.Transform(x, al, m);
-                    m.Position=0;
-                    lpOutput.Emit(new StreamReader(m).ReadToEnd());
-                }
-            }
-            else
-            {
-                //throw?
-                lpOutput.Emit(x);
+                XmlNode? x = REXML.AsXmlNode(Data);
+                if (x != null)
+                    if (lpXSLT.ConnectedTo != null)
+                    {
+                        if (transform == null)
+                        {
+                            inputdata = Data;
+                            inputsuspended = true;
+                            if (lpInput.ConnectedTo != null)
+                                lpInput.ConnectedTo.Suspend();
+                        }
+                        else
+                        {
+                            MemoryStream m = new();
+                            XsltArgumentList al = new();
+                            //TODO: fill argumentlist?
+                            transform.Transform(x, al, m);
+                            m.Position = 0;
+                            lpOutput.Emit(new StreamReader(m).ReadToEnd());
+                        }
+                    }
+                    else
+                    {
+                        //throw?
+                        lpOutput.Emit(x);
+                    }
             }
         }
-
     }
 }

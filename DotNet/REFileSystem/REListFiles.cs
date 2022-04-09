@@ -8,7 +8,7 @@ using RE;
 
 namespace REFileSystem
 {
-    [REItem("listfiles","List Files","List files in a folder")]
+    [REItem("listfiles", "List Files", "List files in a folder")]
     public partial class REListFiles : REBaseItem
     {
         public REListFiles()
@@ -23,7 +23,7 @@ namespace REFileSystem
             txtPattern.Text = Element.GetAttribute("pattern");
             cbRecurse.Checked = StrToBool(Element.GetAttribute("recurse"));
         }
-        
+
         public override void SaveToXml(System.Xml.XmlElement Element)
         {
             base.SaveToXml(Element);
@@ -32,9 +32,9 @@ namespace REFileSystem
             Element.SetAttribute("recurse", BoolToStr(cbRecurse.Checked));
         }
 
-        private FileInfo[] list;
+        private FileInfo[]? list;
         private int listindex;
-        private string pattern;
+        private string? pattern;
         private SearchOption option;
 
         public override void Start()
@@ -42,20 +42,23 @@ namespace REFileSystem
             base.Start();
             pattern = txtPattern.Text;
             option = cbRecurse.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            if (!lpList.IsConnected) DoPath(txtPath.Text);
+            if (lpList.ConnectedTo == null) DoPath(txtPath.Text);
         }
 
         private void DoPath(string Path)
         {
             DirectoryInfo di = new DirectoryInfo(Path);
-            list = di.GetFiles(pattern, option);
-            listindex = 0;
-            DoNext();
+            if (pattern != null)
+            {
+                list = di.GetFiles(pattern, option);
+                listindex = 0;
+                DoNext();
+            }
         }
 
         private void DoNext()
         {
-            if (listindex < list.Length)
+            if (list != null && listindex < list.Length)
             {
                 lpOutput.Emit(list[listindex].FullName, true);
                 listindex++;
@@ -64,7 +67,7 @@ namespace REFileSystem
                 list = null;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object? sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = txtPath.Text;
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
@@ -73,7 +76,9 @@ namespace REFileSystem
 
         private void lpList_Signal(RELinkPoint Sender, object Data)
         {
-            DoPath(Data.ToString());
+            var s = Data.ToString();
+            if (s != null)
+                DoPath(s);
         }
 
         private void lpOutput_Signal(RELinkPoint Sender, object Data)

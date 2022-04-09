@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace RE
@@ -23,9 +18,10 @@ namespace RE
             textBox1.Clear();
         }
 
-        void reLinkPoint1_Signal(RELinkPoint Sender, object Data)
+        void reLinkPoint1_Signal(RELinkPoint Sender, object? Data)
         {
-            textBox1.Text += Data.ToString();
+            if (Data != null)
+                textBox1.Text += Data.ToString();
         }
 
         public override void LoadFromXml(System.Xml.XmlElement Element)

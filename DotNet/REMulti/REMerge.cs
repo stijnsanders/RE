@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -19,7 +14,7 @@ namespace REMulti
             patch = new RELinkPointPatch(lpInput, lpOutput);
         }
 
-        private StringBuilder _mergedata;
+        private StringBuilder? _mergedata;
         private bool _registered;
 
         public override void Start()
@@ -50,7 +45,8 @@ namespace REMulti
         private void lpOutput_Signal(RELinkPoint Sender, object Data)
         {
             _registered = false;
-            lpOutput.Emit(_mergedata.ToString());
+            if (_mergedata != null)
+                lpOutput.Emit(_mergedata.ToString());
             _mergedata = null;
         }
 

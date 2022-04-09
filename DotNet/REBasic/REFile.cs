@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.IO;
@@ -10,10 +6,10 @@ using RE;
 
 namespace REBasic
 {
-    [RE.REItem("file","File","Writes to a file and/or reads an entire file")]
+    [REItem("file", "File", "Writes to a file and/or reads an entire file")]
     public partial class REFile : RE.REBaseItem
     {
-        private RE.RELinkPointPatch patch;
+        private RELinkPointPatch? patch;
 
         public REFile()
         {
@@ -21,7 +17,7 @@ namespace REBasic
             patch = new RELinkPointPatch(lpRead, lpWrite);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object? sender, EventArgs e)
         {
             openFileDialog1.FileName = txtFilePath.Text;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
@@ -31,7 +27,7 @@ namespace REBasic
         public override void LoadFromXml(System.Xml.XmlElement Element)
         {
             base.LoadFromXml(Element);
-            XmlElement path = Element.SelectSingleNode("path") as XmlElement;
+            XmlElement? path = Element.SelectSingleNode("path") as XmlElement;
             if (path != null) txtFilePath.Text = path.InnerText;
         }
 
@@ -43,27 +39,27 @@ namespace REBasic
             Element.AppendChild(path);
         }
 
-        private void copyFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void copyFileLocationToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             txtFilePath.SelectAll();
             txtFilePath.Copy();
         }
 
-        private void pasteFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pasteFileLocationToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             txtFilePath.SelectAll();
             txtFilePath.Paste();
         }
 
-        private StreamWriter FileWriter;
+        private StreamWriter? FileWriter;
         private bool inputsuspended;
-        private object inputdata;
+        private object? inputdata;
 
         public override void Start()
         {
             base.Start();
             FileWriter = null;
-            if (!lpList.IsConnected) DoFile(txtFilePath.Text);
+            if (lpList.ConnectedTo == null) DoFile(txtFilePath.Text);
             inputsuspended = false;
         }
 
@@ -85,14 +81,14 @@ namespace REBasic
                 FileWriter.Close();
                 FileWriter = null;
             }
-            if (lpWrite.IsConnected)
+            if (lpWrite.ConnectedTo != null)
             {
                 FileWriter = new StreamWriter(FileName);
                 //see lpWrite.Signal handler
             }
             else
             {
-                if (lpRead.IsConnected)
+                if (lpRead.ConnectedTo != null)
                 {
                     using (StreamReader sr = new StreamReader(FileName))
                     {
@@ -104,12 +100,16 @@ namespace REBasic
 
         void lpList_Signal(RELinkPoint Sender, object Data)
         {
-            DoFile(Data.ToString());
-            if (inputsuspended)
+            var s = Data.ToString();
+            if (s != null)
             {
-                lpWrite.Resume(inputdata);
-                inputsuspended = false;
-                inputdata = null;
+                DoFile(s);
+                if (inputsuspended && inputdata != null)
+                {
+                    lpWrite.Resume(inputdata);
+                    inputsuspended = false;
+                    inputdata = null;
+                }
             }
         }
 
@@ -125,14 +125,15 @@ namespace REBasic
             else
             {
                 FileWriter.Write(Data);
-                if (lpRead.IsConnected) lpRead.Emit(Data);
+                if (lpRead.ConnectedTo != null) lpRead.Emit(Data);
             }
         }
 
         protected override void DisconnectAll()
         {
             //replacing base.DisconnectAll();
-            patch.Disconnect();
+            if (patch != null)
+                patch.Disconnect();
             lpList.ConnectedTo = null;
         }
 

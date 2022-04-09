@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -22,12 +16,12 @@ namespace REMulti
         }
 
         private int gotindex;
-        private object inputdata;
+        private object? inputdata;
         private bool inputsuspended;
         private bool inputresumed;
         private bool indexSeqEndRegistered;
         private bool indexSeqEnded;
-        private RELinkPoint indexSeqEnd;
+        private RELinkPoint? indexSeqEnd;
 
         public override void Start()
         {
@@ -48,11 +42,12 @@ namespace REMulti
             inputdata = null;
         }
 
-        private void lpIndex_Signal(RELinkPoint Sender, object Data)
+        private void lpIndex_Signal(RELinkPoint Sender, object? Data)
         {
             if (!indexSeqEndRegistered)
             {
-                lpIndex.Emit(indexSeqEnd);
+                if (indexSeqEnd != null)
+                    lpIndex.Emit(indexSeqEnd);
                 indexSeqEnded = false;
                 indexSeqEndRegistered = true;
             }
@@ -61,12 +56,14 @@ namespace REMulti
             {
                 inputsuspended = false;
                 inputresumed = true;
-                lpInput.ConnectedTo.Resume();
+                if (lpInput.ConnectedTo != null)
+                    lpInput.ConnectedTo.Resume();
             }
-            lpEcho.Emit(Data);
+            if (Data != null)
+                lpEcho.Emit(Data);
         }
 
-        void indexSeqEnd_Signal(RELinkPoint Sender, object Data)
+        void indexSeqEnd_Signal(RELinkPoint Sender, object? Data)
         {
             indexSeqEndRegistered = false;
             indexSeqEnded = true;
@@ -74,30 +71,33 @@ namespace REMulti
             {
                 inputsuspended = false;
                 inputresumed = true;
-                lpInput.ConnectedTo.Resume();
+                if (lpInput.ConnectedTo != null)
+                    lpInput.ConnectedTo.Resume();
             }
         }
 
-        private void lpInput_Signal(RELinkPoint Sender, object Data)
+        private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
-            if (!indexSeqEnded || gotindex!=0)
+            if (!indexSeqEnded || gotindex != 0)
                 if (gotindex == 0)
                 {
                     if (inputsuspended) throw new EReUnexpectedInputException(lpInput);
                     inputsuspended = true;
                     inputdata = Data;
-                    lpInput.ConnectedTo.Suspend();
+                    if (lpInput.ConnectedTo != null)
+                        lpInput.ConnectedTo.Suspend();
                 }
                 else
                 {
                     gotindex--;
                     if (inputresumed)
                     {
-                        lpOutput.Emit(inputdata);
+                        if (inputdata != null)
+                            lpOutput.Emit(inputdata);
                         inputresumed = false;
                         inputdata = null;
                     }
-                    else
+                    else if (Data != null)
                         lpOutput.Emit(Data);
                 }
         }

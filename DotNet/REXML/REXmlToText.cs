@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Xml;
 using RE;
 
 namespace REXML
 {
-    [REItem("xmltotext","XML to text","Convert XML to text")]
+    [REItem("xmltotext", "XML to text", "Convert XML to text")]
     public partial class REXmlToText : REBaseItem
     {
         public REXmlToText()
@@ -39,21 +35,27 @@ namespace REXML
                 throw new Exception("[XmlToText] no method selected");
         }
 
-        private void lpInput_Signal(RELinkPoint Sender, object Data)
+        private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
-            XmlNode x = REXML.AsXmlNode(Data);
-            switch (xmethod)
+            if (Data != null)
             {
-                case 0: lpOutput.Emit(x.InnerText); break;
-                case 1: lpOutput.Emit(x.Value); break;
-                case 2: lpOutput.Emit(x.OuterXml); break;
-                case 3: lpOutput.Emit(x.InnerXml); break;
-                case 4: lpOutput.Emit(x.Name); break;
-                case 5: lpOutput.Emit(x.LocalName); break;
-                case 6: lpOutput.Emit(x.Prefix); break;
-                case 7: lpOutput.Emit(x.NamespaceURI); break;
-                case 8: lpOutput.Emit(x.BaseURI); break;
-                case 9: lpOutput.Emit(x.ToString()); break;
+                XmlNode? x = REXML.AsXmlNode(Data);
+                string? y = null;
+                if (x != null)
+                    switch (xmethod)
+                    {
+                        case 0: y = x.InnerText; break;
+                        case 1: y = x.Value; break;
+                        case 2: y = x.OuterXml; break;
+                        case 3: y = x.InnerXml; break;
+                        case 4: y = x.Name; break;
+                        case 5: y = x.LocalName; break;
+                        case 6: y = x.Prefix; break;
+                        case 7: y = x.NamespaceURI; break;
+                        case 8: y = x.BaseURI; break;
+                        case 9: y = x.ToString(); break;
+                    }
+                if (y != null) lpOutput.Emit(y);
             }
         }
 

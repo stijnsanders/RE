@@ -1,9 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -19,7 +14,7 @@ namespace REMulti
             patch = new RELinkPointPatch(lpInput, lpOutput);
         }
 
-        private List<object> _data;
+        private List<object>? _data;
         private int _index;
         private bool _registered;
 
@@ -54,11 +49,14 @@ namespace REMulti
                 throw new EReUnexpectedInputException(lpInput);
         }
 
-        private void lpOutput_Signal(RELinkPoint Sender, object Data)
+        private void lpOutput_Signal(RELinkPoint Sender, object? Data)
         {
-            if (_index == -1) _index = _data.Count;
-            _index--;
-            if (_index != -1) lpOutput.Emit(_data[_index], true);
+            if (_data != null)
+            {
+                if (_index == -1) _index = _data.Count;
+                _index--;
+                if (_index != -1) lpOutput.Emit(_data[_index], true);
+            }
         }
 
         protected override void DisconnectAll()

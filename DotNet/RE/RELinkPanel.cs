@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using System.Xml;
 
 namespace RE
 {
-    internal delegate void LinkPointSignalEvent(RELinkPoint LinkPoint, RELinkPointSignalType Signal, object Data, bool MoreComing);
+    internal delegate void LinkPointSignalEvent(RELinkPoint LinkPoint, RELinkPointSignalType Signal, object? Data, bool MoreComing);
 
     internal partial class RELinkPanel : UserControl, IRELinkPanel
     {
@@ -42,10 +40,10 @@ namespace RE
         protected override void OnControlAdded(ControlEventArgs e)
         {
             base.OnControlAdded(e);
-            if (e.Control is REBaseItem)
+            REBaseItem? Item = e.Control as REBaseItem;
+            if (Item != null)
             {
                 modified = true;
-                REBaseItem Item = e.Control as REBaseItem;
                 Item.Enter += new EventHandler(Item_Enter);
                 Control ItemCaption = Item.Controls["lblCaption"];
                 ItemCaption.MouseDown += new MouseEventHandler(ItemCaption_MouseDown);
@@ -88,11 +86,10 @@ namespace RE
             //modified = true;//see ControlAdded
         }
 
-        public REBaseItem SelectedItem
+        public REBaseItem? SelectedItem
         {
             get
             {
-                //if(SelectedItems.Count>1)raise?
                 return selectedItems.Count == 0 ? null : selectedItems[0] as REBaseItem;
             }
             set
@@ -109,7 +106,7 @@ namespace RE
 
         private bool isMouseDown = false;
 
-        void Item_Enter(object sender, EventArgs e)
+        void Item_Enter(object? sender, EventArgs e)
         {
             if (!isMouseDown) SelectedItem = sender as REBaseItem;
         }
@@ -172,16 +169,17 @@ namespace RE
 
         internal int SaveClipboard(bool deleteSelectedItems)
         {
-            int itemcount;// = selectedItems.Count;
+            int itemcount = 0;// = selectedItems.Count;
             Cursor = Cursors.WaitCursor;
             try
             {
-                XmlDocument xdoc = new XmlDocument();
+                XmlDocument xdoc = new();
                 xdoc.PreserveWhitespace = true;
                 xdoc.LoadXml("<reClipboardData version=\"2.0\" />");
-                XmlElement xroot = xdoc.DocumentElement;
+                XmlElement? xroot = xdoc.DocumentElement;
 
-                itemcount = SaveItems(xroot, true);
+                if(xroot!=null)
+                    itemcount = SaveItems(xroot, true);
 
                 //TODO: extract and concat text from items?
                 Clipboard.SetData(REClipboardFormat, xdoc.OuterXml);
@@ -202,11 +200,11 @@ namespace RE
             {
                 XmlDocument xdoc = new XmlDocument();
                 xdoc.PreserveWhitespace = true;
-                object clipboarddata=Clipboard.GetData(REClipboardFormat);
-                XmlElement xroot = null;
+                string? clipboarddata = Clipboard.GetData(REClipboardFormat) as string;
+                XmlElement? xroot = null;
                 if (clipboarddata != null)
                 {
-                    xdoc.LoadXml(clipboarddata as string);
+                    xdoc.LoadXml(clipboarddata);
                     xroot = xdoc.DocumentElement;
                 }
                 if (xroot == null)
@@ -237,7 +235,7 @@ namespace RE
 
                 foreach (RELinkPoint linkpoint in item.GetLinkPoints(true))
                 {
-                    string linkref;
+                    string? linkref;
                     if (links.Contains(linkpoint))
                     {
                         linkref = links[linkpoint] as string;
@@ -247,7 +245,8 @@ namespace RE
                     {
                         //TODO: use GUID and try to restore on paste?
                         linkref = String.Format("lp{0}", linkrc++);
-                        links.Add(linkpoint.ConnectedTo, linkref);
+                        if (linkpoint.ConnectedTo != null)
+                            links.Add(linkpoint.ConnectedTo, linkref);
                     }
                     XmlElement xlink = xroot.OwnerDocument.CreateElement("link");
                     xlink.SetAttribute("name", linkpoint.Key);
@@ -294,10 +293,11 @@ namespace RE
 
                 foreach (XmlNode xitem in xroot.ChildNodes)
                 {
-                    if (xitem is XmlElement && xitem.Name == "item")
+                    XmlElement? e = xitem as XmlElement;
+                    if (e!=null && e.Name == "item")
                     {
-                        string sysname = (xitem as XmlElement).GetAttribute("class");
-                        REItemType itemtype = knownItemTypes[sysname] as REItemType;
+                        string sysname = e.GetAttribute("class");
+                        REItemType? itemtype = knownItemTypes[sysname] as REItemType;
                         if (itemtype == null)
                         {
                             //throw new Exception(String.Format("Unknown item type \"{0}\"", sysname));
@@ -305,9 +305,11 @@ namespace RE
                         }
                         else
                         {
-                            REBaseItem item = itemtype.CreateOne();
+                            REBaseItem? item = itemtype.CreateOne();
+                            if (item == null)
+                                throw new Exception("REBaseItem CreateOne failed");
                             items.Add(item);
-                            item.LoadFromXml(xitem as XmlElement);
+                            item.LoadFromXml(e);
                             Controls.Add(item);
 
                             if (items.Count == 1)
@@ -320,28 +322,30 @@ namespace RE
 
                             itemlinkslisted = false;
                             itemlinks.Clear();
-                            foreach (XmlElement xlink in xitem.SelectNodes("link"))
-                            {
-                                string linkref = xlink.GetAttribute("ref");
-                                if (!itemlinkslisted)
+                            var l = e.SelectNodes("link");
+                            if (l != null)
+                                foreach (XmlElement xlink in l)
                                 {
-                                    foreach (RELinkPoint linkpoint in item.GetLinkPoints(false))
-                                        itemlinks.Add(linkpoint.Key, linkpoint);
-                                    itemlinkslisted = true;
+                                    string linkref = xlink.GetAttribute("ref");
+                                    if (!itemlinkslisted)
+                                    {
+                                        foreach (RELinkPoint linkpoint in item.GetLinkPoints(false))
+                                            itemlinks.Add(linkpoint.Key, linkpoint);
+                                        itemlinkslisted = true;
+                                    }
+                                    if (links.Contains(linkref))
+                                    {
+                                        //close link
+                                        RELinkPoint? lp1 = itemlinks[xlink.GetAttribute("name")] as RELinkPoint;
+                                        if (!addItems)
+                                            NextLinkColor = StrToColor(xlink.GetAttribute("color"));
+                                        //else use link color from stock
+                                        if (lp1 != null) lp1.ConnectedTo = links[linkref] as RELinkPoint;
+                                        links.Remove(linkref);
+                                    }
+                                    else
+                                        links.Add(linkref, itemlinks[xlink.GetAttribute("name")]);
                                 }
-                                if (links.Contains(linkref))
-                                {
-                                    //close link
-                                    RELinkPoint lp1 = itemlinks[xlink.GetAttribute("name")] as RELinkPoint;
-                                    if (!addItems)
-                                        NextLinkColor = StrToColor(xlink.GetAttribute("color"));
-                                    //else use link color from stock
-                                    if (lp1 != null) lp1.ConnectedTo = links[linkref] as RELinkPoint;
-                                    links.Remove(linkref);
-                                }
-                                else
-                                    links.Add(linkref, itemlinks[xlink.GetAttribute("name")]);
-                            }
                         }
                     }
                     //else ignore? //TODO: keep to save later
@@ -483,7 +487,7 @@ namespace RE
             }
         }
 
-        void ItemCaption_MouseDown(object sender, MouseEventArgs e)
+        void ItemCaption_MouseDown(object? sender, MouseEventArgs e)
         {
             //TODO: treshold?
             isDragging = true;
@@ -492,42 +496,43 @@ namespace RE
             dragStartY = e.Y;
         }
 
-        void ItemCaption_MouseUp(object sender, MouseEventArgs e)
+        void ItemCaption_MouseUp(object? sender, MouseEventArgs e)
         {
             isDragging = false;
             if (!wasDragging)
             {
-                REBaseItem Item = (sender as Control).Parent as REBaseItem;
-                if (KeyboardFlags.CtrlPressed)
-                {
-                    if (selectedItems.Contains(Item))
+                var Item = (sender as Control)?.Parent as REBaseItem;
+                if (Item != null)
+                    if (KeyboardFlags.CtrlPressed)
                     {
-                        selectedItems.Remove(Item);
-                        Item.Selected = false;
+                        if (selectedItems.Contains(Item))
+                        {
+                            selectedItems.Remove(Item);
+                            Item.Selected = false;
+                        }
+                        else
+                        {
+                            selectedItems.Add(Item);
+                            Item.Selected = true;
+                        }
                     }
                     else
                     {
-                        selectedItems.Add(Item);
-                        Item.Selected = true;
+                        SelectedItem = Item;
+                        Item.ItemSelectFocus();//Item.Focus();
                     }
-                }
-                else
-                {
-                    SelectedItem = Item;
-                    (Item as REBaseItem).ItemSelectFocus();//Item.Focus();
-                }
             }
         }
 
-        void ItemCaption_MouseMove(object sender, MouseEventArgs e)
+        void ItemCaption_MouseMove(object? sender, MouseEventArgs e)
         {
             if (isDragging)
             {
                 //TODO: dragging treshold
                 if (!wasDragging)
                 {
-                    REBaseItem Item = (sender as Control).Parent as REBaseItem;
-                    if (!selectedItems.Contains(Item))
+                    var Item = (sender as Control)?.Parent as REBaseItem;
+                    if (Item != null && !selectedItems.Contains(Item))
                         if (KeyboardFlags.CtrlPressed)
                         {
                             selectedItems.Add(Item);
@@ -558,7 +563,7 @@ namespace RE
             }
         }
 
-        void ItemResize_MouseDown(object sender, MouseEventArgs e)
+        void ItemResize_MouseDown(object? sender, MouseEventArgs e)
         {
             //TODO: treshold
             isResizing = true;
@@ -566,15 +571,15 @@ namespace RE
             dragStartY = e.Y;
         }
 
-        void ItemResize_MouseUp(object sender, MouseEventArgs e)
+        void ItemResize_MouseUp(object? sender, MouseEventArgs e)
         {
             isResizing = false;
         }
 
-        void ItemResize_MouseMove(object sender, MouseEventArgs e)
+        void ItemResize_MouseMove(object? sender, MouseEventArgs e)
         {
-            Control BaseItem = (sender as Control).Parent;
-            if (isResizing)
+            Control? BaseItem = (sender as Control)?.Parent;
+            if (isResizing && BaseItem != null)
             {
                 //other items in selection?
                 BaseItem.SetBounds(BaseItem.Left, BaseItem.Top, BaseItem.Width + e.X - dragStartX, BaseItem.Height + e.Y - dragStartY);
@@ -645,12 +650,12 @@ namespace RE
 			new ColorStockEntry(Color.Yellow),
 			new ColorStockEntry(Color.Brown),
 			new ColorStockEntry(Color.Navy),
-			new ColorStockEntry(Color.DarkGray),
+			new ColorStockEntry(Color.Beige),
 			new ColorStockEntry(Color.Orange),
 
             new ColorStockEntry(Color.SkyBlue),
             new ColorStockEntry(Color.Firebrick),
-            new ColorStockEntry(Color.DarkBlue),
+            new ColorStockEntry(Color.DarkCyan),
 			new ColorStockEntry(Color.HotPink),
 			new ColorStockEntry(Color.ForestGreen),
             new ColorStockEntry(Color.Cyan),
@@ -732,7 +737,7 @@ namespace RE
 
         public void ReportLinkDisconnect(RELinkPoint LinkPoint)
         {
-            LinkConnection lc = null;
+            LinkConnection? lc = null;
             foreach (LinkConnection lc1 in connections) if (lc1.LinkPoint1 == LinkPoint || lc1.LinkPoint2 == LinkPoint) lc = lc1;
             if (lc != null)
             {
@@ -752,11 +757,12 @@ namespace RE
             }
         }
 
-        internal event LinkPointSignalEvent LinkPointSignal;
+        internal event LinkPointSignalEvent? LinkPointSignal;
 
-        public void ReportLinkSignal(RELinkPoint LinkPoint, RELinkPointSignalType Signal, object Data, bool MoreComing)
+        public void ReportLinkSignal(RELinkPoint LinkPoint, RELinkPointSignalType Signal, object? Data, bool MoreComing)
         {
-            LinkPointSignal(LinkPoint, Signal, Data, MoreComing);
+            if (LinkPointSignal != null)
+                LinkPointSignal(LinkPoint, Signal, Data, MoreComing);
         }
 
         #endregion

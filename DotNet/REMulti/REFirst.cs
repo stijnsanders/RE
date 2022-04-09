@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using RE;
+﻿using RE;
 
 namespace REMulti
 {
@@ -20,9 +14,9 @@ namespace REMulti
         }
 
         private bool gotItem;
-        private object firstItem;
+        private object? firstItem;
         private bool indexSeqEndRegistered;
-        private RELinkPoint indexSeqEnd;
+        private RELinkPoint? indexSeqEnd;
 
         public override void Start()
         {
@@ -49,16 +43,18 @@ namespace REMulti
             if (!indexSeqEndRegistered)
             {
                 indexSeqEndRegistered = true;
-                Sender.Emit(indexSeqEnd);
+                if (indexSeqEnd != null)
+                    Sender.Emit(indexSeqEnd);
             }
         }
 
-        private void indexSeqEnd_Signal(RELinkPoint Sender, object Data)
+        private void indexSeqEnd_Signal(RELinkPoint Sender, object? Data)
         {
             indexSeqEndRegistered = false;
             if (gotItem)
             {
-                lpOutput.Emit(firstItem);
+                if (firstItem != null)
+                    lpOutput.Emit(firstItem);
                 gotItem = false;
             }
         }

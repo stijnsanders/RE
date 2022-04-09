@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Collections;
@@ -11,13 +10,15 @@ namespace RE
 {
     public /*abstract*/ partial class REBaseItem : UserControl
     {
-        private ContextMenuStrip mergeContextMenu = null;
+        private ContextMenuStrip? mergeContextMenu = null;
         private bool modified = false;
 
         public REBaseItem()
         {
             InitializeComponent();
-            (imgItemResize.Image as Bitmap).MakeTransparent(Color.White);
+            Bitmap? i = imgItemResize.Image as Bitmap;
+            if (i != null)
+                i.MakeTransparent(Color.White);
         }
 
         protected override void OnCreateControl()
@@ -71,17 +72,17 @@ namespace RE
             Parent.Controls.Remove(this);
 		}
 
-        private void bringToFrontToolStripMenuItem_Click(object sender, EventArgs e)
+        private void bringToFrontToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             BringToFront();
         }
 
-        private void sendToBackToolStripMenuItem_Click(object sender, EventArgs e)
+        private void sendToBackToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             SendToBack();
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void closeToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             Close();
         }
@@ -101,40 +102,44 @@ namespace RE
 
         protected virtual void DisconnectAll()
         {
-            ArrayList cq = new ArrayList();
+            ArrayList cq = new();
             cq.Add(this);
-            Control c;
+            Control? c;
             while (cq.Count != 0)
             {
                 c = cq[0] as Control;
                 cq.RemoveAt(0);
-                foreach (Control c1 in c.Controls)
-                {
-                    if (c1.Controls.Count != 0) cq.Add(c1);
-                    if (c1 is RELinkPoint) (c1 as RELinkPoint).ConnectedTo = null;
-                }
+                if (c != null)
+                    foreach (Control c1 in c.Controls)
+                    {
+                        if (c1.Controls.Count != 0) cq.Add(c1);
+                        RELinkPoint? c2 = c1 as RELinkPoint;
+                        if (c2 != null)
+                            c2.ConnectedTo = null;
+                    }
             }
         }
 
         public RELinkPoint[] GetLinkPoints(bool OnlyConnected)
         {
-            List<RELinkPoint> linkpoints = new List<RELinkPoint>();
-            ArrayList cq = new ArrayList();
+            List<RELinkPoint> linkpoints = new();
+            ArrayList cq = new();
             cq.Add(this);
-            Control c;
+            Control? c;
             while (cq.Count != 0)
             {
                 c = cq[0] as Control;
                 cq.RemoveAt(0);
-                foreach (Control c1 in c.Controls)
-                {
-                    if (c1.Controls.Count != 0) cq.Add(c1);
-                    if (c1 is RELinkPoint)
+                if (c != null)
+                    foreach (Control c1 in c.Controls)
                     {
-                        RELinkPoint linkpoint = c1 as RELinkPoint;
-                        if (!OnlyConnected || linkpoint.IsConnected) linkpoints.Add(linkpoint);
+                        if (c1.Controls.Count != 0) cq.Add(c1);
+                        if (c1 is RELinkPoint)
+                        {
+                            RELinkPoint? linkpoint = c1 as RELinkPoint;
+                            if (linkpoint != null && (!OnlyConnected || linkpoint.ConnectedTo != null)) linkpoints.Add(linkpoint);
+                        }
                     }
-                }
             }
             return linkpoints.ToArray();
         }
@@ -183,7 +188,7 @@ namespace RE
 		}
 
         [Browsable(true), Category("Behavior"), Description("ContextMenuStrip to merge with item's ContextMenuStrip")]
-        public ContextMenuStrip MergeContextMenuStrip
+        public ContextMenuStrip? MergeContextMenuStrip
         {
             set { mergeContextMenu = value; }
             get { return mergeContextMenu; }
@@ -196,16 +201,22 @@ namespace RE
                 modified = value;
                 if (!modified)
                     foreach (Control c in Controls)
-                        if (c is TextBox)
-                            (c as TextBox).Modified = false;
+                    {
+                        TextBox? t = c as TextBox;
+                        if (t != null)
+                            t.Modified = false;
+                    }
                 //more classes? cascaded?
             }
             get
             {
                 if (!modified)
                     foreach (Control c in Controls)
-                        if (c is TextBox)
-                            if ((c as TextBox).Modified) return true;
+                    {
+                        TextBox? t = c as TextBox;
+                        if (t != null)
+                            if (t.Modified) return true;
+                    }
                 return modified;
             }
         }

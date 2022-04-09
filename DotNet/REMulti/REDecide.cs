@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -21,13 +15,13 @@ namespace REMulti
             patch2 = new RELinkPointPatch(lpSelect, lpEcho);
         }
 
-        private object inputdata;
-        private object selectdata;
+        private object? inputdata;
+        private object? selectdata;
         private bool inputsent;
         private bool inputdone;
         private bool outputsuspended;
         private bool selectsuspended;
-        private RELinkPoint inputSeqEnd;
+        private RELinkPoint? inputSeqEnd;
 
         public override void Start()
         {
@@ -77,12 +71,14 @@ namespace REMulti
         {
             if (inputdone)
             {
-                lpOutput.Emit(inputSeqEnd);
+                if (inputSeqEnd != null)
+                    lpOutput.Emit(inputSeqEnd);
                 inputdone = false;
             }
             if (selectsuspended)
             {
-                lpEcho.Resume(selectdata);
+                if (selectdata != null)
+                    lpEcho.Resume(selectdata);
                 selectsuspended = false;
                 selectdata = null;
                 if (outputsuspended)
@@ -107,7 +103,7 @@ namespace REMulti
             }
         }
 
-        void inputSeqEnd_Signal(RELinkPoint Sender, object Data)
+        void inputSeqEnd_Signal(RELinkPoint Sender, object? Data)
         {
             if (outputsuspended)
             {

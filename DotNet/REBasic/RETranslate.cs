@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using RE;
 
 namespace REBasic
 {
-    [REItem("translate","Translate","Translate: perform a series of plain text replaces")]
+    [REItem("translate", "Translate", "Translate: perform a series of plain text replaces")]
     public partial class RETranslate : REBaseItem
     {
-        private List<RETranslateItem> TranslateItems=new List<RETranslateItem>();
+        private List<RETranslateItem> TranslateItems = new List<RETranslateItem>();
         private const int _column1Margin = 8;
-        private RE.RELinkPointPatch patch;
+        private RELinkPointPatch patch;
 
         public RETranslate()
         {
@@ -40,11 +38,15 @@ namespace REBasic
             return i;
         }
 
-        private int lastItemIndex=0;
+        private int lastItemIndex = 0;
 
-        void i_Enter(object sender, EventArgs e)
+        void i_Enter(object? sender, EventArgs e)
         {
-            lastItemIndex = TranslateItems.IndexOf(sender as RETranslateItem);
+            var i = sender as RETranslateItem;
+            if (i == null)
+                lastItemIndex = -1;
+            else
+                lastItemIndex = TranslateItems.IndexOf(i);
         }
 
         private void ReOrderItems()
@@ -131,12 +133,14 @@ namespace REBasic
             {
                 //silent
             }
-            foreach (XmlElement t in Element.SelectNodes("translations/translationitem"))
-            {
-                RETranslateItem i = AddNewItem();
-                i.SearchString = t.GetAttribute("search");
-                i.ReplaceString = t.InnerText;
-            }
+            var l = Element.SelectNodes("translations/translationitem");
+            if (l != null)
+                foreach (XmlElement t in l)
+                {
+                    RETranslateItem i = AddNewItem();
+                    i.SearchString = t.GetAttribute("search");
+                    i.ReplaceString = t.InnerText;
+                }
             ReOrderItems();
         }
 
@@ -162,33 +166,36 @@ namespace REBasic
             base.Start();
         }
 
-        void lpInput_Signal(RELinkPoint Sender, object Data)
+        void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
             //InvariantCulture?
             StringComparison c = StringComparison.CurrentCulture;
             if (cbIgnoreCase.Checked) c = StringComparison.CurrentCultureIgnoreCase;
-            string s = Data.ToString();
-            foreach (RETranslateItem i in TranslateItems)
-                if (i.SearchString != "")
-                {
-                    //s = s.Replace(i.SearchString, i.ReplaceString);
-                    int j = 0;
-                    while (j != -1)
+            string? s = Data?.ToString();
+            if (s != null)
+            {
+                foreach (RETranslateItem i in TranslateItems)
+                    if (i.SearchString != "")
                     {
-                        j = s.IndexOf(i.SearchString, j, c);
-                        if (j != -1)
+                        //s = s.Replace(i.SearchString, i.ReplaceString);
+                        int j = 0;
+                        while (j != -1)
                         {
-                            s = s.Substring(0, j) + i.ReplaceString + s.Substring(j + i.SearchString.Length);
-                            j += i.ReplaceString.Length;
-                            if (!cbGlobal.Checked || j > s.Length) j = -1;
+                            j = s.IndexOf(i.SearchString, j, c);
+                            if (j != -1)
+                            {
+                                s = s.Substring(0, j) + i.ReplaceString + s.Substring(j + i.SearchString.Length);
+                                j += i.ReplaceString.Length;
+                                if (!cbGlobal.Checked || j > s.Length) j = -1;
+                            }
                         }
                     }
-                }
-            lpOutput.Emit(s);
+                lpOutput.Emit(s);
+            }
         }
 
         private int _column1Left;
-        private bool _column1LeftDragging=false;
+        private bool _column1LeftDragging = false;
         private int _column1LeftDragStart;
         private int _column1LeftDragStartX;
 
@@ -220,7 +227,7 @@ namespace REBasic
 
         private void panColumn1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_column1LeftDragging) 
+            if (_column1LeftDragging)
                 Column1Left = _column1LeftDragStart + MousePosition.X - _column1LeftDragStartX;
         }
 
@@ -237,4 +244,3 @@ namespace REBasic
 
     }
 }
-

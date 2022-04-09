@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -46,12 +42,12 @@ namespace REMulti
             uniqueData = null;
         }
 
-        private SortedList<string, int> uniqueData;
+        private SortedList<string, int>? uniqueData;
         //private bool registered;
 
         private void lpInput_Signal(RELinkPoint Sender, object Data)
         {
-            if (lpUnique.IsConnected || lpDuplicate.IsConnected)
+            if (lpUnique.ConnectedTo != null || lpDuplicate.ConnectedTo != null)
             {
                 if (uniqueData == null)
                 {
@@ -60,17 +56,18 @@ namespace REMulti
                     lpUnique.Emit(lpUnique);
                     //registered = true;
                 }
-                string x;
-                if (ignoreCaseToolStripMenuItem.Checked)
-                    x = Data.ToString().ToLower();
-                else
-                    x = Data.ToString();
-                if (uniqueData.ContainsKey(x))
-                    lpDuplicate.Emit(Data);
-                else
+                string? x = Data.ToString();
+                if (x != null)
                 {
-                    uniqueData.Add(x, 1);
-                    lpUnique.Emit(Data);
+                    if (ignoreCaseToolStripMenuItem.Checked)
+                        x = x.ToLower();
+                    if (uniqueData.ContainsKey(x))
+                        lpDuplicate.Emit(Data);
+                    else
+                    {
+                        uniqueData.Add(x, 1);
+                        lpUnique.Emit(Data);
+                    }
                 }
             }
         }

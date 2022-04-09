@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using RE;
 
 namespace REMulti
 {
     [REItem("builder", "Builder", "Repeats most recent data for each input on selected inputs")]
-    public partial class REBuilder : RE.REBaseItem
+    public partial class REBuilder : REBaseItem
     {
-        private List<REBuilderSlot> inputs = new List<REBuilderSlot>();
+        private List<REBuilderSlot> inputs = new();
 
         public REBuilder()
         {
@@ -59,7 +57,7 @@ namespace REMulti
         }
 
         private bool OutputSuspended;
-        private List<List<object>> SendQueue;
+        private List<List<object>>? SendQueue;
         private int SendIndex;
 
         public override void Start()
@@ -68,7 +66,7 @@ namespace REMulti
             OutputSuspended = false;
             SendIndex = 0;
             SendQueue = new List<List<object>>();
-            if (lpOutput.IsConnected)
+            if (lpOutput.ConnectedTo != null)
             {
                 int count = 0;
                 foreach (REBuilderSlot ss in inputs) if (ss.Start(this)) count++;
@@ -88,7 +86,7 @@ namespace REMulti
 
         internal void CheckOutput()
         {
-            if (lpOutput.IsConnected && SendQueue.Count != 0)
+            if (lpOutput.ConnectedTo != null && SendQueue!=null && SendQueue.Count != 0)
             {
                 if (SendIndex == SendQueue[0].Count)
                 {
@@ -114,22 +112,23 @@ namespace REMulti
             List<object> entry = new List<object>();
             foreach (REBuilderSlot ss in inputs) if (ss.Data != null) entry.Add(ss.Data);
             //assert entry.Count>1
-            SendQueue.Add(entry);
+            if (SendQueue != null)
+                SendQueue.Add(entry);
             if (OutputSuspended) CheckOutput();
         }
 
-        void lpOutput_Signal(RELinkPoint Sender, object Data)
+        void lpOutput_Signal(RELinkPoint Sender, object? Data)
         {
-            if (SendQueue.Count != 0) SendIndex++;
+            if (SendQueue != null && SendQueue.Count != 0) SendIndex++;
             CheckOutput();
         }
 
-        private void btnPlus_Click(object sender, EventArgs e)
+        private void btnPlus_Click(object? sender, EventArgs e)
         {
             InputCount = InputCount + 1;
         }
 
-        private void btnMinus_Click(object sender, EventArgs e)
+        private void btnMinus_Click(object? sender, EventArgs e)
         {
             if (InputCount > 2) InputCount = InputCount - 1;
         }
@@ -152,16 +151,18 @@ namespace REMulti
             InputCount = Int32.Parse(Element.GetAttribute("inputs"));
             base.LoadFromXml(Element);
             foreach (REBuilderSlot ss in inputs) ss.CheckBox.Checked = false;
-            foreach (System.Xml.XmlNode x in Element.SelectNodes("emit"))
-                inputs[Convert.ToInt32(x.Attributes["id"].Value) - 1].CheckBox.Checked = true;
+            var l = Element.SelectNodes("emit");
+            if (l != null)
+                foreach (System.Xml.XmlNode x in l)
+                    inputs[Convert.ToInt32(x.Attributes?["id"]?.Value) - 1].CheckBox.Checked = true;
         }
 
         private class REBuilderSlot
         {
-            private REBuilder _owner;
+            private REBuilder? _owner;
             private RELinkPoint _linkpoint;
             private CheckBox _checkbox;
-            private object _data;
+            private object? _data;
 
             public REBuilderSlot(RELinkPoint LinkPoint, CheckBox CheckBox)
             {
@@ -182,7 +183,7 @@ namespace REMulti
                 get { return _checkbox; }
             }
 
-            public object Data
+            public object? Data
             {
                 get { return _data; }
             }
@@ -191,7 +192,7 @@ namespace REMulti
             {
                 _owner = Owner;
                 _data = null;
-                return _linkpoint.IsConnected;
+                return _linkpoint.ConnectedTo != null;
             }
 
             public void Stop()
@@ -201,9 +202,9 @@ namespace REMulti
                 _data = null;
             }
 
-            void _linkpoint_Signal(RELinkPoint Sender, object Data)
+            void _linkpoint_Signal(RELinkPoint Sender, object? Data)
             {
-                if (_owner.lpOutput.IsConnected)
+                if (_owner!=null && _owner.lpOutput.ConnectedTo != null)
                 {
                     _data = Data;
                     if (_checkbox.Checked) _owner.QueueData();

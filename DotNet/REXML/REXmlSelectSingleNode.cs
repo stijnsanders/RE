@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Xml;
+﻿using System.Xml;
 using RE;
 
 namespace REXML
 {
-    [REItem("xmlselectsinglenode","SelectSingleNode","Perform SelectSingleNode")]
+    [REItem("xmlselectsinglenode", "SelectSingleNode", "Perform SelectSingleNode")]
     public partial class REXmlSelectSingleNode : REBaseItem
     {
         public REXmlSelectSingleNode()
@@ -28,7 +23,7 @@ namespace REXML
             Element.SetAttribute("query", textBox1.Text);
         }
 
-        private string xquery;
+        private string? xquery;
 
         public override void Start()
         {
@@ -38,8 +33,11 @@ namespace REXML
 
         private void lpInput_Signal(RELinkPoint Sender, object Data)
         {
-            XmlNode x = REXML.AsXmlNode(Data).SelectSingleNode(xquery);
-            if (x != null) lpOutput.Emit(x);
+            if (xquery != null)
+            {
+                XmlNode? x = REXML.AsXmlNode(Data)?.SelectSingleNode(xquery);
+                if (x != null) lpOutput.Emit(x);
+            }
         }
     }
 }

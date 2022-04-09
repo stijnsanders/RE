@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Xml;
 using RE;
 
 namespace REXML
 {
-    [REItem("xmlnode","Node","Get a related xml node")]
+    [REItem("xmlnode", "Node", "Get a related xml node")]
     public partial class REXmlNode : REBaseItem
     {
         public REXmlNode()
@@ -38,21 +34,27 @@ namespace REXML
             if (xprop == -1) throw new Exception("[XmlNode]no XmlNode property selected");
         }
 
-        private void lpInput_Signal(RELinkPoint Sender, object Data)
+        private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
-            XmlNode x=REXML.AsXmlNode(Data);
-            switch (xprop)
+            if (Data != null)
             {
-                case 0: lpOutput.Emit(x.FirstChild); break;
-                case 1: lpOutput.Emit(x.NextSibling); break;
-                case 2: lpOutput.Emit(x.ParentNode); break;
-                case 3: lpOutput.Emit(x.LastChild); break;
-                case 4: lpOutput.Emit(x.PreviousSibling); break;
-                case 5: lpOutput.Emit(x.OwnerDocument.DocumentElement); break;
+                XmlNode? x = REXML.AsXmlNode(Data);
+                XmlNode? y = null;
+                if (x != null)
+                    switch (xprop)
+                    {
+                        case 0: y = x.FirstChild; break;
+                        case 1: y = x.NextSibling; break;
+                        case 2: y = x.ParentNode; break;
+                        case 3: y = x.LastChild; break;
+                        case 4: y = x.PreviousSibling; break;
+                        case 5: y = x.OwnerDocument?.DocumentElement; break;
+                    }
+                if (y != null) lpOutput.Emit(y);
             }
         }
 
-        private void cbProp_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbProp_SelectedIndexChanged(object? sender, EventArgs e)
         {
             Modified = true;
         }

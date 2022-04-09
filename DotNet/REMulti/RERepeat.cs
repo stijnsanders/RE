@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using RE;
 
 namespace REMulti
@@ -22,15 +17,15 @@ namespace REMulti
         }
 
         private bool hasRequiredConnections;
-        private object repeatData;
-        private object echoData;
+        private object? repeatData;
+        private object? echoData;
         private int isRepeating;
         // 0: no
         // 1: yes but no index yet
         // 2: yes and waiting for output back 
         private bool passAsItComes;
         private bool indexSeqEndRegistered;
-        private RELinkPoint indexSeqEnd;
+        private RELinkPoint? indexSeqEnd;
 
         public override void LoadFromXml(System.Xml.XmlElement Element)
         {
@@ -47,7 +42,7 @@ namespace REMulti
         public override void Start()
         {
             base.Start();
-            hasRequiredConnections = lpInput.IsConnected && lpOutput.IsConnected && lpIndex.IsConnected;
+            hasRequiredConnections = lpInput.ConnectedTo != null && lpOutput.ConnectedTo != null && lpIndex.ConnectedTo != null;
             isRepeating = 0;
             repeatData = null;
             echoData = null;
@@ -72,13 +67,15 @@ namespace REMulti
             {
                 if (!indexSeqEndRegistered)
                 {
-                    lpIndex.Emit(indexSeqEnd);
+                    if (indexSeqEnd != null)
+                        lpIndex.Emit(indexSeqEnd);
                     indexSeqEndRegistered = true;
                 }
                 if (isRepeating == 1)
                 {
                     isRepeating = 2;
-                    lpOutput.Resume(repeatData);
+                    if (repeatData != null)
+                        lpOutput.Resume(repeatData);
                     lpEcho.Emit(Data);
                 }
                 else
@@ -89,20 +86,22 @@ namespace REMulti
             }
         }
 
-        private void indexSeqEnd_Signal(RELinkPoint Sender, object Data)
+        private void indexSeqEnd_Signal(RELinkPoint Sender, object? Data)
         {
             indexSeqEndRegistered = false;
             repeatData = null;
-            if (isRepeating != 2) lpOutput.Resume();
-            if (isRepeating != 0 && !passAsItComes) lpInput.ConnectedTo.Resume();
+            if (isRepeating != 2) 
+                lpOutput.Resume();
+            if (isRepeating != 0 && !passAsItComes && lpInput.ConnectedTo != null) 
+                lpInput.ConnectedTo.Resume();
         }
 
-        private void lpEcho_Signal(RELinkPoint Sender, object Data)
+        private void lpEcho_Signal(RELinkPoint Sender, object? Data)
         {
             //
         }
 
-        private void lpInput_Signal(RELinkPoint Sender, object Data)
+        private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
             if (hasRequiredConnections)
                 if (isRepeating == 0)
@@ -115,9 +114,10 @@ namespace REMulti
                         lpEcho.Resume(echoData);
                         echoData = null;
                         isRepeating = 2;
-                        lpOutput.Resume(repeatData);
+                        if (repeatData != null)
+                            lpOutput.Resume(repeatData);
                     }
-                    if (!passAsItComes) lpInput.ConnectedTo.Suspend();
+                    if (!passAsItComes && lpInput.ConnectedTo != null) lpInput.ConnectedTo.Suspend();
                 }
                 else
                 {
@@ -126,11 +126,11 @@ namespace REMulti
                     else
                         throw new EReUnexpectedInputException(lpInput);
                 }
-            else
+            else if (Data != null)
                 lpOutput.Emit(Data);
         }
 
-        private void lpOutput_Signal(RELinkPoint Sender, object Data)
+        private void lpOutput_Signal(RELinkPoint Sender, object? Data)
         {
             if (isRepeating == 2)
             {
@@ -144,7 +144,8 @@ namespace REMulti
                     lpEcho.Resume(echoData);
                     echoData = null;
                     isRepeating = 2;
-                    lpOutput.Emit(repeatData, true);
+                    if (repeatData != null)
+                        lpOutput.Emit(repeatData, true);
                 }
             }
             //else throw new EReUnexpectedInputException(lpOutput);

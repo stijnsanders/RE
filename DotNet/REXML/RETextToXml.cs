@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Xml;
 using RE;
 
@@ -38,10 +34,14 @@ namespace REXML
 
         private void lpInput_Signal(RELinkPoint Sender, object Data)
         {
-            XmlDocument doc=new XmlDocument();
-            if (setpresws) doc.PreserveWhitespace = true;
-            doc.LoadXml(Data.ToString());
-            lpOutput.Emit(doc);//.DocumentElement);?
+            var s = Data.ToString();
+            if (s != null)
+            {
+                XmlDocument doc = new XmlDocument();
+                if (setpresws) doc.PreserveWhitespace = true;
+                doc.LoadXml(s);
+                lpOutput.Emit(doc);//.DocumentElement);?
+            }
         }
 
         private void preserveWhiteSpaceToolStripMenuItem_Click(object sender, EventArgs e)

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RE
 {
@@ -21,7 +18,7 @@ namespace RE
         public void Disconnect()
         {
             //call Disconnect() from REBaseItem.DisconnectAll()!
-            if (lp1.IsConnected && lp2.IsConnected)
+            if (lp1.ConnectedTo != null && lp2.ConnectedTo != null)
             {
                 lp1.ConnectedTo.ConnectedTo = lp2.ConnectedTo;
             }
