@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{9DA5420E-0943-4839-B1EE-844B9EC01336}
 AppName=Regular Expression
-AppVerName=Regular Expression 2.0.4.640
+AppVerName=Regular Expression 2.0.4.646
 AppPublisher=Double Sigma Programming
 AppPublisherURL=http://yoy.be/re
 AppSupportURL=http://yoy.be/re
@@ -29,15 +29,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "DotNet\bin\Release\RE.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\RELib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\REBasic.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\RERegex.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\REMulti.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\REFileSystem.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\REXML.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\REJSON.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\REHTTP.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\RE.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\RE.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\RELib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\REBasic.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\RERegex.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\REMulti.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\REFileSystem.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\REXML.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\REJSON.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\REHTTP.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\WhatsNew.txt"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -56,7 +57,6 @@ Root: HKCR; Subkey: "Applications\RE.exe\shell\open\command"; ValueType: string;
 [Icons]
 Name: "{group}\Regular Expression"; Filename: "{app}\RE.exe"
 Name: "{commondesktop}\Regular Expression"; Filename: "{app}\RE.exe"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Regular Expression"; Filename: "{app}\RE.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\RE.exe"; Description: "{cm:LaunchProgram,Regular Expression}"; Flags: shellexec postinstall skipifsilent

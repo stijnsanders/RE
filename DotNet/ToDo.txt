@@ -1,6 +1,6 @@
 TODO
 
-open-source this!
+multi threaded
 
 options dialog
 
@@ -28,13 +28,13 @@ Multi:Index (start,inc,leftpad-zero,hex)
 String:Length (leftpad-zero,hex)
 
 
-File FileLarge in een?
+File FileLarge into one?
 
 auto-repeat on constants?
 
 check when running: no change links!
 
-waar en hoe REFile streams sluiten?
+where and how REFile close streams?
 
 dll without default registration object: auto-generate menuitem?
 
@@ -44,4 +44,4 @@ what with IEnumerable/IEnumerator?
 drag and drop files: multiple files: multiple load (offset locations if items?)
 recent files
 
-REJoin: consider PassAsItComes on by default, or always on
+REJoin: consider PassAsItComes on by default, or always on (see alse multi threaded)
