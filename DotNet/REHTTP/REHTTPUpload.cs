@@ -13,23 +13,27 @@ namespace REHTTP
         {
             InitializeComponent();
             patch = new RELinkPointPatch(lpInput, lpOutput);
+            contenttype = ""; //default, see Start
         }
 
         public override void LoadFromXml(System.Xml.XmlElement Element)
         {
             base.LoadFromXml(Element);
-            textBox1.Text = Element.GetAttribute("url");
+            txtURL.Text = Element.GetAttribute("url");
+            txtContentType.Text = Element.GetAttribute("contenttype");
         }
 
         public override void SaveToXml(System.Xml.XmlElement Element)
         {
             base.SaveToXml(Element);
-            Element.SetAttribute("url", textBox1.Text);
+            Element.SetAttribute("url", txtURL.Text);
+            Element.SetAttribute("contenttype", txtContentType.Text);
         }
 
         private WebClient? webc;
         private object? listdata;
-        private String? listurl;
+        private string? listurl;
+        private string contenttype;
 
         public override void Start()
         {
@@ -37,7 +41,7 @@ namespace REHTTP
             webc = new WebClient();
             listdata = null;
             listurl = null;
-            //TODO: sequence of lpList?
+            contenttype = txtContentType.Text;
         }
 
         public override void Stop()
@@ -55,13 +59,24 @@ namespace REHTTP
                 {
                     var s = Data.ToString();
                     if (s != null)
-                        lpOutput.Emit(webc.UploadString(textBox1.Text, s));
+                    {
+                        if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
+                        webc.Encoding = System.Text.Encoding.UTF8;
+                        lpOutput.Emit(webc.UploadString(txtURL.Text, s));
+                        if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                    }
                 }
                 else
                 {
                     listdata = Data;
                     var s = listdata.ToString();
-                    if (s != null && listurl != null) lpOutput.Emit(webc.UploadString(listurl, s));
+                    if (s != null && listurl != null)
+                    {
+                        if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
+                        webc.Encoding = System.Text.Encoding.UTF8;
+                        lpOutput.Emit(webc.UploadString(listurl, s));
+                        if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                    }
                 }
         }
 
@@ -69,7 +84,13 @@ namespace REHTTP
         {
             listurl = Data?.ToString();
             var s = listdata?.ToString();
-            if (webc != null && listurl != null && s != null) lpOutput.Emit(webc.UploadString(listurl, s));
+            if (webc != null && listurl != null && s != null)
+            {
+                if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
+                webc.Encoding = System.Text.Encoding.UTF8;
+                lpOutput.Emit(webc.UploadString(listurl, s));
+                if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+            }
         }
 
         protected override void DisconnectAll()

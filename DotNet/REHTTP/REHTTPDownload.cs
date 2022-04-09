@@ -33,6 +33,7 @@ namespace REHTTP
             {
                 webc.Encoding = System.Text.Encoding.UTF8;
                 lpOutput.Emit(webc.DownloadString(textBox1.Text));
+                if(webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
             }
         }
 
@@ -47,8 +48,12 @@ namespace REHTTP
             if (webc != null)
             {
                 var s = Data?.ToString();
-                if(s!=null)
-                lpOutput.Emit(webc.DownloadString(s));
+                if (s != null)
+                {
+                    webc.Encoding = System.Text.Encoding.UTF8;
+                    lpOutput.Emit(webc.DownloadString(s));
+                    if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                }
             }
         }
 

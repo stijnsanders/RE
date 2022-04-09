@@ -31,11 +31,13 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lpList = new RE.RELinkPoint();
             this.lpOutput = new RE.RELinkPoint();
+            this.lpHeaders = new RE.RELinkPoint();
             this.panItemClient.SuspendLayout();
             this.SuspendLayout();
             // 
             // panItemClient
             // 
+            this.panItemClient.Controls.Add(this.lpHeaders);
             this.panItemClient.Controls.Add(this.lpOutput);
             this.panItemClient.Controls.Add(this.lpList);
             this.panItemClient.Controls.Add(this.textBox1);
@@ -43,9 +45,9 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(4, 4);
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(3, 5);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(167, 21);
             this.textBox1.TabIndex = 0;
@@ -73,16 +75,29 @@
             this.lpOutput.ConnectionColor = System.Drawing.Color.Transparent;
             this.lpOutput.Direction = RE.RELinkPointDirection.Output;
             this.lpOutput.Key = "output";
-            this.lpOutput.Location = new System.Drawing.Point(4, 32);
+            this.lpOutput.Location = new System.Drawing.Point(3, 32);
             this.lpOutput.Name = "lpOutput";
             this.lpOutput.Size = new System.Drawing.Size(48, 16);
             this.lpOutput.TabIndex = 2;
+            // 
+            // lpHeaders
+            // 
+            this.lpHeaders.AllowDrop = true;
+            this.lpHeaders.Caption = "headers";
+            this.lpHeaders.ConnectedTo = null;
+            this.lpHeaders.ConnectionColor = System.Drawing.Color.Transparent;
+            this.lpHeaders.Direction = RE.RELinkPointDirection.Output;
+            this.lpHeaders.Key = "output";
+            this.lpHeaders.Location = new System.Drawing.Point(57, 32);
+            this.lpHeaders.Name = "lpHeaders";
+            this.lpHeaders.Size = new System.Drawing.Size(48, 16);
+            this.lpHeaders.TabIndex = 4;
             // 
             // REHTTPDownload
             // 
             this.Caption = "HTTP Download";
             this.MaximumSize = new System.Drawing.Size(0, 79);
-            this.MinimumSize = new System.Drawing.Size(60, 79);
+            this.MinimumSize = new System.Drawing.Size(120, 79);
             this.Name = "REHTTPDownload";
             this.Size = new System.Drawing.Size(208, 79);
             this.panItemClient.ResumeLayout(false);
@@ -97,5 +112,6 @@
         private RE.RELinkPoint lpOutput;
         private RE.RELinkPoint lpList;
         private System.Windows.Forms.TextBox textBox1;
+        private RE.RELinkPoint lpHeaders;
     }
 }
