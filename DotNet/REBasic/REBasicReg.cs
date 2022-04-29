@@ -36,6 +36,8 @@ namespace REBasic
             ri.DropDownItems.Add(new REItemMenuItem(typeof(REStrUpper)));
             ri.DropDownItems.Add(new REItemMenuItem(typeof(REStrLower)));
             ri.DropDownItems.Add(new REItemMenuItem(typeof(REStrReverse)));
+            ri.DropDownItems.Add(new ToolStripSeparator());
+            ri.DropDownItems.Add(new REItemMenuItem(typeof(REStrLength)));
             return ri;
         }
     }

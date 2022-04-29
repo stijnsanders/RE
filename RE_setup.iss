@@ -7,12 +7,13 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{9DA5420E-0943-4839-B1EE-844B9EC01336}
 AppName=Regular Expression
+VersionInfoVersion=2.0.4.646 
 AppVerName=Regular Expression 2.0.4.646
 AppPublisher=Double Sigma Programming
 AppPublisherURL=http://yoy.be/re
 AppSupportURL=http://yoy.be/re
 AppUpdatesURL=http://yoy.be/re
-DefaultDirName={pf}\RE
+DefaultDirName={userpf}\RE
 DefaultGroupName=Regular Expression
 AllowNoIcons=yes
 OutputDir=.
@@ -20,6 +21,7 @@ OutputBaseFilename=RE_setup
 SetupIconFile=DotNet\RE\App.ico
 Compression=lzma
 SolidCompression=yes
+PrivilegesRequired=none
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -30,6 +32,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "DotNet\bin\Release\net5.0-windows\RE.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net5.0-windows\RE.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\bin\Release\net5.0-windows\RE.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\bin\Release\net5.0-windows\RELib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\bin\Release\net5.0-windows\REBasic.dll"; DestDir: "{app}"; Flags: ignoreversion

@@ -37,6 +37,13 @@ namespace REBasic
         protected override string Perform(string Data) { return Data.TrimEnd(); }
     }
 
+    [REItem("strlen", "Length", "Measures the length of a string")]
+    public class REStrLength : REBasic.REBaseStringOp
+    {
+        public REStrLength() { Caption = "Length"; }
+        protected override string Perform(string Data) { return Data.Length.ToString(); }
+    }
+
     [REItem("strappendeol", "Append EOL", "Append an end-of-line code")]
     public class REStrAppendEOL : REBasic.REBaseStringOp
     {
