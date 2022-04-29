@@ -19,6 +19,7 @@ namespace REHTTP
         public override void LoadFromXml(System.Xml.XmlElement Element)
         {
             base.LoadFromXml(Element);
+            cbMethod.Text = Element.GetAttribute("method");
             txtURL.Text = Element.GetAttribute("url");
             txtContentType.Text = Element.GetAttribute("contenttype");
         }
@@ -26,11 +27,13 @@ namespace REHTTP
         public override void SaveToXml(System.Xml.XmlElement Element)
         {
             base.SaveToXml(Element);
+            Element.SetAttribute("method", cbMethod.Text);
             Element.SetAttribute("url", txtURL.Text);
             Element.SetAttribute("contenttype", txtContentType.Text);
         }
 
         private WebClient? webc;
+        private string? method;
         private object? listdata;
         private string? listurl;
         private string contenttype;
@@ -39,6 +42,7 @@ namespace REHTTP
         {
             base.Start();
             webc = new WebClient();
+            method = cbMethod.Text;
             listdata = null;
             listurl = null;
             contenttype = txtContentType.Text;
@@ -62,7 +66,7 @@ namespace REHTTP
                     {
                         if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
                         webc.Encoding = System.Text.Encoding.UTF8;
-                        lpOutput.Emit(webc.UploadString(txtURL.Text, s));
+                        lpOutput.Emit(webc.UploadString(txtURL.Text, method, s));
                         if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
                     }
                 }
@@ -99,6 +103,5 @@ namespace REHTTP
             patch.Disconnect();
             lpList.ConnectedTo = null;
         }
-
     }
 }

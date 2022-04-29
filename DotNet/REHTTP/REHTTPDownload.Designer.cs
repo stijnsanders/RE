@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lpList = new RE.RELinkPoint();
             this.lpOutput = new RE.RELinkPoint();
             this.lpHeaders = new RE.RELinkPoint();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.methodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panItemClient.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panItemClient
@@ -93,15 +97,31 @@
             this.lpHeaders.Size = new System.Drawing.Size(48, 16);
             this.lpHeaders.TabIndex = 4;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.methodToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(117, 26);
+            // 
+            // methodToolStripMenuItem
+            // 
+            this.methodToolStripMenuItem.Name = "methodToolStripMenuItem";
+            this.methodToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.methodToolStripMenuItem.Text = "Method";
+            // 
             // REHTTPDownload
             // 
             this.Caption = "HTTP Download";
+            this.ContextMenuStrip = this.contextMenuStrip1;
             this.MaximumSize = new System.Drawing.Size(0, 79);
             this.MinimumSize = new System.Drawing.Size(120, 79);
             this.Name = "REHTTPDownload";
             this.Size = new System.Drawing.Size(208, 79);
+            this.Controls.SetChildIndex(this.panItemClient, 0);
             this.panItemClient.ResumeLayout(false);
             this.panItemClient.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -113,5 +133,7 @@
         private RE.RELinkPoint lpList;
         private System.Windows.Forms.TextBox textBox1;
         private RE.RELinkPoint lpHeaders;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem methodToolStripMenuItem;
     }
 }

@@ -35,11 +35,15 @@
             this.lpHeaders = new RE.RELinkPoint();
             this.txtContentType = new System.Windows.Forms.TextBox();
             this.lblContentType = new System.Windows.Forms.Label();
+            this.lblMethod = new System.Windows.Forms.Label();
+            this.cbMethod = new System.Windows.Forms.ComboBox();
             this.panItemClient.SuspendLayout();
             this.SuspendLayout();
             // 
             // panItemClient
             // 
+            this.panItemClient.Controls.Add(this.cbMethod);
+            this.panItemClient.Controls.Add(this.lblMethod);
             this.panItemClient.Controls.Add(this.lblContentType);
             this.panItemClient.Controls.Add(this.txtContentType);
             this.panItemClient.Controls.Add(this.lpHeaders);
@@ -74,7 +78,7 @@
             this.lpList.Location = new System.Drawing.Point(177, 5);
             this.lpList.Name = "lpList";
             this.lpList.Size = new System.Drawing.Size(21, 21);
-            this.lpList.TabIndex = 4;
+            this.lpList.TabIndex = 1;
             // 
             // txtURL
             // 
@@ -83,7 +87,7 @@
             this.txtURL.Location = new System.Drawing.Point(3, 5);
             this.txtURL.Name = "txtURL";
             this.txtURL.Size = new System.Drawing.Size(167, 21);
-            this.txtURL.TabIndex = 3;
+            this.txtURL.TabIndex = 0;
             // 
             // lpInput
             // 
@@ -116,23 +120,47 @@
             // 
             this.txtContentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtContentType.Location = new System.Drawing.Point(3, 45);
+            this.txtContentType.Location = new System.Drawing.Point(89, 45);
             this.txtContentType.Name = "txtContentType";
-            this.txtContentType.Size = new System.Drawing.Size(195, 21);
-            this.txtContentType.TabIndex = 6;
+            this.txtContentType.Size = new System.Drawing.Size(109, 21);
+            this.txtContentType.TabIndex = 5;
             // 
             // lblContentType
             // 
             this.lblContentType.AutoSize = true;
-            this.lblContentType.Location = new System.Drawing.Point(3, 29);
+            this.lblContentType.Location = new System.Drawing.Point(89, 29);
             this.lblContentType.Name = "lblContentType";
             this.lblContentType.Size = new System.Drawing.Size(83, 13);
-            this.lblContentType.TabIndex = 5;
+            this.lblContentType.TabIndex = 4;
             this.lblContentType.Text = "Content-Type";
+            // 
+            // lblMethod
+            // 
+            this.lblMethod.AutoSize = true;
+            this.lblMethod.Location = new System.Drawing.Point(3, 29);
+            this.lblMethod.Name = "lblMethod";
+            this.lblMethod.Size = new System.Drawing.Size(48, 13);
+            this.lblMethod.TabIndex = 2;
+            this.lblMethod.Text = "Method";
+            // 
+            // cbMethod
+            // 
+            this.cbMethod.FormattingEnabled = true;
+            this.cbMethod.Items.AddRange(new object[] {
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"});
+            this.cbMethod.Location = new System.Drawing.Point(3, 45);
+            this.cbMethod.Name = "cbMethod";
+            this.cbMethod.Size = new System.Drawing.Size(80, 21);
+            this.cbMethod.TabIndex = 3;
+            this.cbMethod.Text = "POST";
             // 
             // REHTTPUpload
             // 
             this.Caption = "HTTP Upload";
+            this.ContextMenuStrip = null;
             this.MaximumSize = new System.Drawing.Size(0, 118);
             this.MinimumSize = new System.Drawing.Size(170, 118);
             this.Name = "REHTTPUpload";
@@ -153,5 +181,7 @@
         private RE.RELinkPoint lpHeaders;
         private System.Windows.Forms.TextBox txtContentType;
         private System.Windows.Forms.Label lblContentType;
+        private System.Windows.Forms.ComboBox cbMethod;
+        private System.Windows.Forms.Label lblMethod;
     }
 }
