@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using RE;
 
 namespace REHTTP
@@ -24,23 +25,22 @@ namespace REHTTP
         }
 
         private HttpClient? webc;
+        private Task<string>? webd;
 
-        public override async void Start()
+        public override void Start()
         {
             base.Start();
             webc = new HttpClient();
+            webd = null;
             if (lpList.ConnectedTo == null)
-            {
-                var m = webc.Send(new HttpRequestMessage(HttpMethod.Get, txtURL.Text));
-                lpOutput.Emit(await m.Content.ReadAsStringAsync());
-                lpHeaders.Emit(m.Headers.ToString());
-            }
+                DoRequest(txtURL.Text);
         }
 
         public override void Stop()
         {
             base.Stop();
             webc = null;
+            webd = null;
         }
 
         private void lpList_Signal(RELinkPoint Sender, object? Data)
@@ -49,15 +49,41 @@ namespace REHTTP
             {
                 var s = Data?.ToString();
                 if (s != null)
-                {
-                    var m = webc.Send(new HttpRequestMessage(HttpMethod.Get, s));
-                    var t = m.Content.ReadAsStringAsync();
-                    t.Wait();
-                    lpOutput.Emit(t.Result);
+                    DoRequest(s);
+            }
+        }
+
+        private void DoRequest(string Url)
+        {
+            if (webc == null)
+                throw new EReException("Unexpected DoRequest outside of Start/Stop");
+            var m = webc.Send(new HttpRequestMessage(HttpMethod.Get, Url));
+            var c = m.Content.ReadAsStringAsync();
+            if (lpHeaders.ConnectedTo == null)
+            {
+                c.Wait();
+                lpOutput.Emit(c.Result);
+            }
+            else
+            {
+                if (lpOutput.ConnectedTo == null)
                     lpHeaders.Emit(m.Headers.ToString());
+                else
+                {
+                    lpHeaders.Emit(m.Headers.ToString(), true);
+                    webd = c;
                 }
             }
         }
 
+        private void lpHeaders_Signal(RELinkPoint Sender, object Data)
+        {
+            if (webd == null)
+                throw new EReException("Unexpected return on Output");
+            var d = webd;
+            webd = null;
+            d.Wait();
+            lpOutput.Emit(d.Result);
+        }
     }
 }

@@ -90,11 +90,12 @@
             lpHeaders.ConnectedTo = null;
             lpHeaders.ConnectionColor = System.Drawing.Color.Transparent;
             lpHeaders.Direction = RE.RELinkPointDirection.Output;
-            lpHeaders.Key = "output";
+            lpHeaders.Key = "headers";
             lpHeaders.Location = new System.Drawing.Point(57, 32);
             lpHeaders.Name = "lpHeaders";
             lpHeaders.Size = new System.Drawing.Size(48, 16);
             lpHeaders.TabIndex = 4;
+            lpHeaders.Signal += lpHeaders_Signal;
             // 
             // contextMenuStrip1
             // 

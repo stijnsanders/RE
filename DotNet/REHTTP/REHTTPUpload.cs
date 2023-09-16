@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using RE;
 
 namespace REHTTP
@@ -32,6 +33,7 @@ namespace REHTTP
         }
 
         private HttpClient? webc;
+        private Task<string>? webd;
         private string? method;
         private object? listdata;
         private string? listurl;
@@ -41,6 +43,7 @@ namespace REHTTP
         {
             base.Start();
             webc = new HttpClient();
+            webd = null;
             method = cbMethod.Text;
             listdata = null;
             listurl = null;
@@ -59,33 +62,15 @@ namespace REHTTP
         {
             if (webc != null)
                 if (lpList.ConnectedTo == null)
-                {
-                    var s = Data.ToString();
-                    if (s != null)
-                    {
-                        var r = new HttpRequestMessage(new HttpMethod(method ?? "GET"), txtURL.Text);
-                        if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
-                        r.Content = new StringContent(s);
-                        var m = webc.Send(r);
-                        var t = m.Content.ReadAsStringAsync();
-                        t.Wait();
-                        lpOutput.Emit(t.Result);
-                        lpHeaders.Emit(m.Headers.ToString());
-                    }
-                }
+                    DoRequest(txtURL.Text, Data);
                 else
                 {
                     listdata = Data;
-                    var s = listdata.ToString();
-                    if (s != null && listurl != null)
+                    if (listdata != null && listurl != null)
                     {
-                        var r = new HttpRequestMessage(new HttpMethod(method ?? "GET"), s);
-                        if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
-                        var m = webc.Send(r);
-                        var t = m.Content.ReadAsStringAsync();
-                        t.Wait();
-                        lpOutput.Emit(t.Result);
-                        lpHeaders.Emit(m.Headers.ToString());
+                        DoRequest(listurl, listdata);
+                        listurl = null;
+                        listdata = null;
                     }
                 }
         }
@@ -93,18 +78,58 @@ namespace REHTTP
         private void lpList_Signal(RELinkPoint Sender, object? Data)
         {
             listurl = Data?.ToString();
-            var s = listdata?.ToString();
-            if (webc != null && listurl != null && s != null)
+            if (webc != null && listurl != null && listdata != null)
             {
-                var r = new HttpRequestMessage(new HttpMethod(method ?? "GET"), listurl);
-                if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
-                r.Content = new StringContent(s);
-                var m = webc.Send(r);
-                var t = m.Content.ReadAsStringAsync();
-                t.Wait();
-                lpOutput.Emit(t.Result);
-                lpHeaders.Emit(m.Headers.ToString());
+                DoRequest(listurl, listdata);
+                listurl = null;
+                listdata = null;
             }
+        }
+
+        private void DoRequest(string Url, object Data)
+        {
+            if (webc == null)
+                throw new EReException("Unexpected DoRequest outside of Start/Stop");
+            var r = new HttpRequestMessage(new HttpMethod(method ?? "POST"), Url);
+            if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
+            if (Data != null)
+                if (Data is string)
+                    r.Content = new StringContent(Data as string ?? "");
+                else
+                    /*
+                    if (Data is Stream)
+                        r.Content = new StreamContent(Data as Stream);
+                    else
+                    //TODO: more?
+                    */
+                    r.Content = new StringContent(Data.ToString() ?? "");//throw?
+            var m = webc.Send(r);
+            var c = m.Content.ReadAsStringAsync();
+            if (lpHeaders.ConnectedTo == null)
+            {
+                c.Wait();
+                lpOutput.Emit(c.Result);
+            }
+            else
+            {
+                if (lpOutput.ConnectedTo == null)
+                    lpHeaders.Emit(m.Headers.ToString());
+                else
+                {
+                    lpHeaders.Emit(m.Headers.ToString(), true);
+                    webd = c;
+                }
+            }
+        }
+
+        private void lpHeaders_Signal(RELinkPoint Sender, object Data)
+        {
+            if (webd == null)
+                throw new EReException("Unexpected return on Output");
+            var d = webd;
+            webd = null;
+            d.Wait();
+            lpOutput.Emit(d.Result);
         }
 
         protected override void DisconnectAll()

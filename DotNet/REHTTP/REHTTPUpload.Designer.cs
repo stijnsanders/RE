@@ -28,148 +28,143 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lpOutput = new RE.RELinkPoint();
-            this.lpList = new RE.RELinkPoint();
-            this.txtURL = new System.Windows.Forms.TextBox();
-            this.lpInput = new RE.RELinkPoint();
-            this.lpHeaders = new RE.RELinkPoint();
-            this.txtContentType = new System.Windows.Forms.TextBox();
-            this.lblContentType = new System.Windows.Forms.Label();
-            this.lblMethod = new System.Windows.Forms.Label();
-            this.cbMethod = new System.Windows.Forms.ComboBox();
-            this.panItemClient.SuspendLayout();
-            this.SuspendLayout();
+            lpOutput = new RE.RELinkPoint();
+            lpList = new RE.RELinkPoint();
+            txtURL = new System.Windows.Forms.TextBox();
+            lpInput = new RE.RELinkPoint();
+            lpHeaders = new RE.RELinkPoint();
+            txtContentType = new System.Windows.Forms.TextBox();
+            lblContentType = new System.Windows.Forms.Label();
+            lblMethod = new System.Windows.Forms.Label();
+            cbMethod = new System.Windows.Forms.ComboBox();
+            panItemClient.SuspendLayout();
+            SuspendLayout();
             // 
             // panItemClient
             // 
-            this.panItemClient.Controls.Add(this.cbMethod);
-            this.panItemClient.Controls.Add(this.lblMethod);
-            this.panItemClient.Controls.Add(this.lblContentType);
-            this.panItemClient.Controls.Add(this.txtContentType);
-            this.panItemClient.Controls.Add(this.lpHeaders);
-            this.panItemClient.Controls.Add(this.lpInput);
-            this.panItemClient.Controls.Add(this.lpOutput);
-            this.panItemClient.Controls.Add(this.lpList);
-            this.panItemClient.Controls.Add(this.txtURL);
-            this.panItemClient.Size = new System.Drawing.Size(201, 93);
+            panItemClient.Controls.Add(cbMethod);
+            panItemClient.Controls.Add(lblMethod);
+            panItemClient.Controls.Add(lblContentType);
+            panItemClient.Controls.Add(txtContentType);
+            panItemClient.Controls.Add(lpHeaders);
+            panItemClient.Controls.Add(lpInput);
+            panItemClient.Controls.Add(lpOutput);
+            panItemClient.Controls.Add(lpList);
+            panItemClient.Controls.Add(txtURL);
+            panItemClient.Size = new System.Drawing.Size(201, 93);
             // 
             // lpOutput
             // 
-            this.lpOutput.AllowDrop = true;
-            this.lpOutput.Caption = "output";
-            this.lpOutput.ConnectedTo = null;
-            this.lpOutput.ConnectionColor = System.Drawing.Color.Transparent;
-            this.lpOutput.Direction = RE.RELinkPointDirection.Output;
-            this.lpOutput.Key = "output";
-            this.lpOutput.Location = new System.Drawing.Point(57, 72);
-            this.lpOutput.Name = "lpOutput";
-            this.lpOutput.Size = new System.Drawing.Size(48, 16);
-            this.lpOutput.TabIndex = 8;
+            lpOutput.AllowDrop = true;
+            lpOutput.Caption = "output";
+            lpOutput.ConnectedTo = null;
+            lpOutput.ConnectionColor = System.Drawing.Color.Transparent;
+            lpOutput.Direction = RE.RELinkPointDirection.Output;
+            lpOutput.Key = "output";
+            lpOutput.Location = new System.Drawing.Point(57, 72);
+            lpOutput.Name = "lpOutput";
+            lpOutput.Size = new System.Drawing.Size(48, 16);
+            lpOutput.TabIndex = 8;
             // 
             // lpList
             // 
-            this.lpList.AllowDrop = true;
-            this.lpList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lpList.Caption = "";
-            this.lpList.ConnectedTo = null;
-            this.lpList.ConnectionColor = System.Drawing.Color.Transparent;
-            this.lpList.Direction = RE.RELinkPointDirection.Input;
-            this.lpList.Key = "list";
-            this.lpList.Location = new System.Drawing.Point(177, 5);
-            this.lpList.Name = "lpList";
-            this.lpList.Size = new System.Drawing.Size(21, 21);
-            this.lpList.TabIndex = 1;
+            lpList.AllowDrop = true;
+            lpList.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            lpList.Caption = "";
+            lpList.ConnectedTo = null;
+            lpList.ConnectionColor = System.Drawing.Color.Transparent;
+            lpList.Direction = RE.RELinkPointDirection.Input;
+            lpList.Key = "list";
+            lpList.Location = new System.Drawing.Point(177, 5);
+            lpList.Name = "lpList";
+            lpList.Size = new System.Drawing.Size(21, 21);
+            lpList.TabIndex = 1;
+            lpList.Signal += lpList_Signal;
             // 
             // txtURL
             // 
-            this.txtURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtURL.Location = new System.Drawing.Point(3, 5);
-            this.txtURL.Name = "txtURL";
-            this.txtURL.Size = new System.Drawing.Size(167, 21);
-            this.txtURL.TabIndex = 0;
+            txtURL.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txtURL.Location = new System.Drawing.Point(3, 5);
+            txtURL.Name = "txtURL";
+            txtURL.Size = new System.Drawing.Size(167, 21);
+            txtURL.TabIndex = 0;
             // 
             // lpInput
             // 
-            this.lpInput.AllowDrop = true;
-            this.lpInput.Caption = "input";
-            this.lpInput.ConnectedTo = null;
-            this.lpInput.ConnectionColor = System.Drawing.Color.Transparent;
-            this.lpInput.Direction = RE.RELinkPointDirection.Input;
-            this.lpInput.Key = "input";
-            this.lpInput.Location = new System.Drawing.Point(3, 72);
-            this.lpInput.Name = "lpInput";
-            this.lpInput.Size = new System.Drawing.Size(48, 16);
-            this.lpInput.TabIndex = 7;
-            this.lpInput.Signal += new RE.RELinkPointSignal(this.lpInput_Signal);
+            lpInput.AllowDrop = true;
+            lpInput.Caption = "input";
+            lpInput.ConnectedTo = null;
+            lpInput.ConnectionColor = System.Drawing.Color.Transparent;
+            lpInput.Direction = RE.RELinkPointDirection.Input;
+            lpInput.Key = "input";
+            lpInput.Location = new System.Drawing.Point(3, 72);
+            lpInput.Name = "lpInput";
+            lpInput.Size = new System.Drawing.Size(48, 16);
+            lpInput.TabIndex = 7;
+            lpInput.Signal += lpInput_Signal;
             // 
             // lpHeaders
             // 
-            this.lpHeaders.AllowDrop = true;
-            this.lpHeaders.Caption = "headers";
-            this.lpHeaders.ConnectedTo = null;
-            this.lpHeaders.ConnectionColor = System.Drawing.Color.Transparent;
-            this.lpHeaders.Direction = RE.RELinkPointDirection.Output;
-            this.lpHeaders.Key = "output";
-            this.lpHeaders.Location = new System.Drawing.Point(111, 72);
-            this.lpHeaders.Name = "lpHeaders";
-            this.lpHeaders.Size = new System.Drawing.Size(48, 16);
-            this.lpHeaders.TabIndex = 9;
+            lpHeaders.AllowDrop = true;
+            lpHeaders.Caption = "headers";
+            lpHeaders.ConnectedTo = null;
+            lpHeaders.ConnectionColor = System.Drawing.Color.Transparent;
+            lpHeaders.Direction = RE.RELinkPointDirection.Output;
+            lpHeaders.Key = "headers";
+            lpHeaders.Location = new System.Drawing.Point(111, 72);
+            lpHeaders.Name = "lpHeaders";
+            lpHeaders.Size = new System.Drawing.Size(48, 16);
+            lpHeaders.TabIndex = 9;
+            lpHeaders.Signal += lpHeaders_Signal;
             // 
             // txtContentType
             // 
-            this.txtContentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtContentType.Location = new System.Drawing.Point(89, 45);
-            this.txtContentType.Name = "txtContentType";
-            this.txtContentType.Size = new System.Drawing.Size(109, 21);
-            this.txtContentType.TabIndex = 5;
+            txtContentType.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txtContentType.Location = new System.Drawing.Point(89, 45);
+            txtContentType.Name = "txtContentType";
+            txtContentType.Size = new System.Drawing.Size(109, 21);
+            txtContentType.TabIndex = 5;
             // 
             // lblContentType
             // 
-            this.lblContentType.AutoSize = true;
-            this.lblContentType.Location = new System.Drawing.Point(89, 29);
-            this.lblContentType.Name = "lblContentType";
-            this.lblContentType.Size = new System.Drawing.Size(83, 13);
-            this.lblContentType.TabIndex = 4;
-            this.lblContentType.Text = "Content-Type";
+            lblContentType.AutoSize = true;
+            lblContentType.Location = new System.Drawing.Point(89, 29);
+            lblContentType.Name = "lblContentType";
+            lblContentType.Size = new System.Drawing.Size(83, 13);
+            lblContentType.TabIndex = 4;
+            lblContentType.Text = "Content-Type";
             // 
             // lblMethod
             // 
-            this.lblMethod.AutoSize = true;
-            this.lblMethod.Location = new System.Drawing.Point(3, 29);
-            this.lblMethod.Name = "lblMethod";
-            this.lblMethod.Size = new System.Drawing.Size(48, 13);
-            this.lblMethod.TabIndex = 2;
-            this.lblMethod.Text = "Method";
+            lblMethod.AutoSize = true;
+            lblMethod.Location = new System.Drawing.Point(3, 29);
+            lblMethod.Name = "lblMethod";
+            lblMethod.Size = new System.Drawing.Size(48, 13);
+            lblMethod.TabIndex = 2;
+            lblMethod.Text = "Method";
             // 
             // cbMethod
             // 
-            this.cbMethod.FormattingEnabled = true;
-            this.cbMethod.Items.AddRange(new object[] {
-            "POST",
-            "PUT",
-            "PATCH",
-            "DELETE"});
-            this.cbMethod.Location = new System.Drawing.Point(3, 45);
-            this.cbMethod.Name = "cbMethod";
-            this.cbMethod.Size = new System.Drawing.Size(80, 21);
-            this.cbMethod.TabIndex = 3;
-            this.cbMethod.Text = "POST";
+            cbMethod.FormattingEnabled = true;
+            cbMethod.Items.AddRange(new object[] { "POST", "PUT", "PATCH", "DELETE" });
+            cbMethod.Location = new System.Drawing.Point(3, 45);
+            cbMethod.Name = "cbMethod";
+            cbMethod.Size = new System.Drawing.Size(80, 21);
+            cbMethod.TabIndex = 3;
+            cbMethod.Text = "POST";
             // 
             // REHTTPUpload
             // 
-            this.Caption = "HTTP Upload";
-            this.ContextMenuStrip = null;
-            this.MaximumSize = new System.Drawing.Size(0, 118);
-            this.MinimumSize = new System.Drawing.Size(170, 118);
-            this.Name = "REHTTPUpload";
-            this.Size = new System.Drawing.Size(208, 118);
-            this.panItemClient.ResumeLayout(false);
-            this.panItemClient.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            Caption = "HTTP Upload";
+            ContextMenuStrip = null;
+            MaximumSize = new System.Drawing.Size(0, 118);
+            MinimumSize = new System.Drawing.Size(170, 118);
+            Name = "REHTTPUpload";
+            Size = new System.Drawing.Size(208, 118);
+            panItemClient.ResumeLayout(false);
+            panItemClient.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
