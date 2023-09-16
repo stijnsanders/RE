@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net.Http;
 using RE;
 
 namespace REHTTP
@@ -32,7 +31,7 @@ namespace REHTTP
             Element.SetAttribute("contenttype", txtContentType.Text);
         }
 
-        private WebClient? webc;
+        private HttpClient? webc;
         private string? method;
         private object? listdata;
         private string? listurl;
@@ -41,7 +40,7 @@ namespace REHTTP
         public override void Start()
         {
             base.Start();
-            webc = new WebClient();
+            webc = new HttpClient();
             method = cbMethod.Text;
             listdata = null;
             listurl = null;
@@ -64,10 +63,14 @@ namespace REHTTP
                     var s = Data.ToString();
                     if (s != null)
                     {
-                        if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
-                        webc.Encoding = System.Text.Encoding.UTF8;
-                        lpOutput.Emit(webc.UploadString(txtURL.Text, method, s));
-                        if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                        var r = new HttpRequestMessage(new HttpMethod(method ?? "GET"), txtURL.Text);
+                        if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
+                        r.Content = new StringContent(s);
+                        var m = webc.Send(r);
+                        var t = m.Content.ReadAsStringAsync();
+                        t.Wait();
+                        lpOutput.Emit(t.Result);
+                        lpHeaders.Emit(m.Headers.ToString());
                     }
                 }
                 else
@@ -76,10 +79,13 @@ namespace REHTTP
                     var s = listdata.ToString();
                     if (s != null && listurl != null)
                     {
-                        if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
-                        webc.Encoding = System.Text.Encoding.UTF8;
-                        lpOutput.Emit(webc.UploadString(listurl, s));
-                        if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                        var r = new HttpRequestMessage(new HttpMethod(method ?? "GET"), s);
+                        if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
+                        var m = webc.Send(r);
+                        var t = m.Content.ReadAsStringAsync();
+                        t.Wait();
+                        lpOutput.Emit(t.Result);
+                        lpHeaders.Emit(m.Headers.ToString());
                     }
                 }
         }
@@ -90,10 +96,14 @@ namespace REHTTP
             var s = listdata?.ToString();
             if (webc != null && listurl != null && s != null)
             {
-                if (contenttype != "") webc.Headers.Add(HttpRequestHeader.ContentType, contenttype);
-                webc.Encoding = System.Text.Encoding.UTF8;
-                lpOutput.Emit(webc.UploadString(listurl, s));
-                if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                var r = new HttpRequestMessage(new HttpMethod(method ?? "GET"), listurl);
+                if (contenttype != "") r.Headers.Add("Content-Type", contenttype);
+                r.Content = new StringContent(s);
+                var m = webc.Send(r);
+                var t = m.Content.ReadAsStringAsync();
+                t.Wait();
+                lpOutput.Emit(t.Result);
+                lpHeaders.Emit(m.Headers.ToString());
             }
         }
 

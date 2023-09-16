@@ -29,6 +29,7 @@ namespace RERegex
             {
                 string[] g = ItemRegex.GetGroupNames();
                 SuspendLayout();
+                int x = Width;
                 int i = 0;
                 while (i < g.Length)
                 {
@@ -59,13 +60,13 @@ namespace RERegex
                 if (i > MinimumSize.Height)
                 {
                     MaximumSize = new Size(MaximumSize.Width, i);
-                    Height = i;
+                    Size = new Size(x, i);
                     MinimumSize = new Size(MinimumSize.Width, i);
                 }
                 else
                 {
                     MinimumSize = new Size(MinimumSize.Width, i);
-                    Height = i;
+                    Size = new Size(x, i);
                     MaximumSize = new Size(MaximumSize.Width, i);
                 }
             }

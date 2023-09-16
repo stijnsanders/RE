@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using System.Net.Http;
 using RE;
 
 namespace REHTTP
@@ -14,26 +14,26 @@ namespace REHTTP
         public override void LoadFromXml(System.Xml.XmlElement Element)
         {
             base.LoadFromXml(Element);
-            textBox1.Text = Element.GetAttribute("url");
+            txtURL.Text = Element.GetAttribute("url");
         }
 
         public override void SaveToXml(System.Xml.XmlElement Element)
         {
             base.SaveToXml(Element);
-            Element.SetAttribute("url", textBox1.Text);
+            Element.SetAttribute("url", txtURL.Text);
         }
 
-        private WebClient? webc;
+        private HttpClient? webc;
 
-        public override void Start()
+        public override async void Start()
         {
             base.Start();
-            webc = new WebClient();
+            webc = new HttpClient();
             if (lpList.ConnectedTo == null)
             {
-                webc.Encoding = System.Text.Encoding.UTF8;
-                lpOutput.Emit(webc.DownloadString(textBox1.Text));
-                if(webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                var m = webc.Send(new HttpRequestMessage(HttpMethod.Get, txtURL.Text));
+                lpOutput.Emit(await m.Content.ReadAsStringAsync());
+                lpHeaders.Emit(m.Headers.ToString());
             }
         }
 
@@ -50,9 +50,11 @@ namespace REHTTP
                 var s = Data?.ToString();
                 if (s != null)
                 {
-                    webc.Encoding = System.Text.Encoding.UTF8;
-                    lpOutput.Emit(webc.DownloadString(s));
-                    if (webc.ResponseHeaders != null) lpHeaders.Emit(webc.ResponseHeaders);
+                    var m = webc.Send(new HttpRequestMessage(HttpMethod.Get, s));
+                    var t = m.Content.ReadAsStringAsync();
+                    t.Wait();
+                    lpOutput.Emit(t.Result);
+                    lpHeaders.Emit(m.Headers.ToString());
                 }
             }
         }

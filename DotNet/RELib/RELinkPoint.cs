@@ -154,11 +154,11 @@ namespace RE
             get
             {
                 Point a = new Point(Left + Width / 2, Top + Height / 2);
-                Control c = Parent;
+                Control? c = Parent;
                 while (c != null && !(c is IRELinkPanel))
                 {
                     a.Offset(c.Left, c.Top);
-                    c = c.Parent;
+                    c = c.Parent ?? null;
                 }
                 return a;
             }
@@ -200,7 +200,7 @@ namespace RE
             base.OnDragEnter(drgevent);
             drgevent.Effect = DragDropEffects.None;//default not allowed!
             //if(drgevent.Data.GetDataPresent(typeof(ucLinkPoint)))??
-            RELinkPoint? Item = drgevent.Data.GetData(typeof(RELinkPoint)) as RELinkPoint;
+            RELinkPoint? Item = drgevent.Data?.GetData(typeof(RELinkPoint)) as RELinkPoint;
             if (Item != null)
             {
                 if (Item == this || (
@@ -221,7 +221,7 @@ namespace RE
             base.OnDragDrop(drgevent);
             //assert(FLinkPanel!=null)
             //Connection=;
-            RELinkPoint? lp = drgevent.Data.GetData(typeof(RELinkPoint)) as RELinkPoint;
+            RELinkPoint? lp = drgevent.Data?.GetData(typeof(RELinkPoint)) as RELinkPoint;
             if (lp == null || lp == this)
                 ConnectedTo = null;
             else if (direction == lp.Direction)

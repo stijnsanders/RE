@@ -885,14 +885,18 @@ namespace RE
 
         private void REMainForm_DragEnter(object? sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false)
                 e.Effect = DragDropEffects.Copy;
         }
 
         private void REMainForm_DragDrop(object? sender, DragEventArgs e)
         {
             if (CheckChanges())
-                LoadFile(((string[])e.Data.GetData(DataFormats.FileDrop))[0]);
+            {
+                var d = e.Data?.GetData(DataFormats.FileDrop);
+                if (d != null)
+                    LoadFile(((string[])d)[0]);
+            }
         }
 
     }

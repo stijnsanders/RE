@@ -16,7 +16,7 @@ namespace REBasic
         {
             if (Data != null)
             {
-                Clipboard.SetText(Data.ToString());
+                Clipboard.SetText(Data.ToString() ?? Data.GetType().ToString());
                 if (lpGet.ConnectedTo != null) lpGet.Emit(Data);
             }
         }

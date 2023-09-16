@@ -45,14 +45,20 @@ namespace RE
             {
                 modified = true;
                 Item.Enter += new EventHandler(Item_Enter);
-                Control ItemCaption = Item.Controls["lblCaption"];
-                ItemCaption.MouseDown += new MouseEventHandler(ItemCaption_MouseDown);
-                ItemCaption.MouseMove += new MouseEventHandler(ItemCaption_MouseMove);
-                ItemCaption.MouseUp += new MouseEventHandler(ItemCaption_MouseUp);
-                Control ItemResize = Item.Controls["imgItemResize"];
-                ItemResize.MouseDown += new MouseEventHandler(ItemResize_MouseDown);
-                ItemResize.MouseMove += new MouseEventHandler(ItemResize_MouseMove);
-                ItemResize.MouseUp += new MouseEventHandler(ItemResize_MouseUp);
+                Control? ItemCaption = Item.Controls["lblCaption"];
+                if (ItemCaption != null)
+                {
+                    ItemCaption.MouseDown += new MouseEventHandler(ItemCaption_MouseDown);
+                    ItemCaption.MouseMove += new MouseEventHandler(ItemCaption_MouseMove);
+                    ItemCaption.MouseUp += new MouseEventHandler(ItemCaption_MouseUp);
+                }
+                Control? ItemResize = Item.Controls["imgItemResize"];
+                if (ItemResize != null)
+                {
+                    ItemResize.MouseDown += new MouseEventHandler(ItemResize_MouseDown);
+                    ItemResize.MouseMove += new MouseEventHandler(ItemResize_MouseMove);
+                    ItemResize.MouseUp += new MouseEventHandler(ItemResize_MouseUp);
+                }
             }
         }
 
@@ -164,7 +170,8 @@ namespace RE
 
         internal bool CanLoadClipboard()
         {
-            return Clipboard.GetDataObject().GetDataPresent(REClipboardFormat);
+            var d = Clipboard.GetDataObject();
+            return (d != null) && d.GetDataPresent(REClipboardFormat);
         }
 
         internal int SaveClipboard(bool deleteSelectedItems)
@@ -450,7 +457,7 @@ namespace RE
                             }
                 }
                 
-                Parent.Focus();
+                Parent?.Focus();
             }
         }
 

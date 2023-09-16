@@ -69,7 +69,7 @@ namespace RE
             //TODO: add to undo stack!
             //ask parent verif? if(LinkPanel.VerifItemRemove)
             DisconnectAll();
-            Parent.Controls.Remove(this);
+            Parent?.Controls.Remove(this);
 		}
 
         private void bringToFrontToolStripMenuItem_Click(object? sender, EventArgs e)
