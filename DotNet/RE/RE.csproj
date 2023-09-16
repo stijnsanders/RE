@@ -5,10 +5,10 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
-	  <FileVersion>2.1.0.646</FileVersion>
+	  <FileVersion>2.1.0.655</FileVersion>
 	  <BaseOutputPath>..\bin\</BaseOutputPath>
 	  <ApplicationIcon>App.ico</ApplicationIcon>
-	  <AssemblyVersion>2.1.0.646</AssemblyVersion>
+	  <AssemblyVersion>2.1.0.655</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
