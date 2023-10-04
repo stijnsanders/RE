@@ -53,22 +53,15 @@ namespace RERegex
                     panItemClient.Controls.Remove(outputs[i]);
                     outputs.RemoveAt(i);
                 }
-                ResumeLayout();
-                Invalidate(false);//some border-line get garbled?
+
                 //i = 79 + outputs.Count * 20;
                 i = 79 + g.Length * 20;
-                if (i > MinimumSize.Height)
-                {
-                    MaximumSize = new Size(MaximumSize.Width, i);
-                    Size = new Size(x, i);
-                    MinimumSize = new Size(MinimumSize.Width, i);
-                }
-                else
-                {
-                    MinimumSize = new Size(MinimumSize.Width, i);
-                    Size = new Size(x, i);
-                    MaximumSize = new Size(MaximumSize.Width, i);
-                }
+                MinimumSize = new Size(MinimumSize.Width, i);
+                MaximumSize = new Size(MaximumSize.Width, i);
+                Size = new Size(x, i);
+
+                ResumeLayout();
+                Invalidate(false);//some border-line get garbled?
             }
             catch
             {
