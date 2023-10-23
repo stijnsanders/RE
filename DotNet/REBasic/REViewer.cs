@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using RE;
 
 namespace RE
@@ -12,16 +13,49 @@ namespace RE
             reLinkPoint1.Signal += new RELinkPointSignal(reLinkPoint1_Signal);
         }
 
+        private const int RelaxDisplayAfterXInputs = 200;
+        private const int RelaxDisplayEachMS = 1250;
+        private int _inputs;
+        private string _buffer = "";//StringBuilder?
+        private DateTime _lastDisplay;
+
         public override void Start()
         {
             base.Start();
             textBox1.Clear();
+            _inputs = 0;
+            _buffer = "";
+            _lastDisplay = DateTime.Now;
+        }
+
+        public override void Stop()
+        {
+            textBox1.Text += _buffer;
+            base.Stop();
         }
 
         void reLinkPoint1_Signal(RELinkPoint Sender, object? Data)
         {
             if (Data != null)
-                textBox1.Text += Data.ToString();
+            {
+                DateTime n = DateTime.Now;
+                if (_inputs < RelaxDisplayAfterXInputs)
+                {
+                    textBox1.Text += Data.ToString();
+                    _lastDisplay = n;
+                    _inputs++;
+                }
+                else
+                {
+                    _buffer += Data.ToString();
+                    if (_lastDisplay < n.AddMilliseconds(-RelaxDisplayEachMS))
+                    {
+                        textBox1.Text += _buffer;
+                        _buffer = "";
+                        _lastDisplay = n;
+                    }
+                }
+            }
         }
 
         public override void LoadFromXml(System.Xml.XmlElement Element)

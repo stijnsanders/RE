@@ -2,6 +2,7 @@
 - target .Net 7.0
 - added REJSON.dll
 - added REHTTP.dll
+- viewer: 'relaxed' display after first 1000 inputs
 2.0.3.614
 - target .Net Framework 4.6
 - XML selectSingleNode no output null when no node found
