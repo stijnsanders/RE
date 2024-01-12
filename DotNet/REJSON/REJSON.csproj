@@ -6,8 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <BaseOutputPath>..\bin\</BaseOutputPath>
     <ApplicationIcon>reData.ico</ApplicationIcon>
-    <AssemblyVersion>2.1.0.655</AssemblyVersion>
-    <FileVersion>2.1.0.655</FileVersion>
+    <AssemblyVersion>2.1.0.656</AssemblyVersion>
+    <FileVersion>2.1.0.656</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

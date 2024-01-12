@@ -1,9 +1,10 @@
 ﻿using RE;
+using System.Collections;
 using System.Text.Json;
 
 namespace REJSON
 {
-    [REItem("jsonenumobject","JSON enumerate object","Enumerate JSON object elements")]
+    [REItem("jsonenumobject", "JSON enumerate object", "Enumerate JSON object elements")]
     public partial class REEnumObject : REBaseItem
     {
         public REEnumObject()
@@ -25,27 +26,66 @@ namespace REJSON
             list = null;
         }
 
-        private void SendNext()
-        {
-            if (list!=null && list.MoveNext())
-                lpOutput.Emit(list.Current, true);
-            else
-                list = null;
-        }
-
         private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
+            if (list != null)
+                throw new RE.EReUnexpectedInputException(lpInput);
             JsonElement? e = Data as JsonElement?;
             if (e.HasValue)
             {
                 list = e.Value.EnumerateObject();
-                SendNext();
+                if (list != null && list.MoveNext())
+                {
+                    var p = list.Current as JsonProperty?;
+                    if (p.HasValue)
+                        if (lpOutputKeys.ConnectedTo != null)
+                            lpOutputKeys.Emit(p.Value.Name, true);
+                        else if (lpOutputValues.ConnectedTo != null)
+                            lpOutputValues.Emit(p.Value.Value, true);
+                }
+                else
+                    list = null;
             }
         }
 
-        private void lpOutput_Signal(RELinkPoint Sender, object? Data)
+        private void lpOutputKeys_Signal(RELinkPoint Sender, object Data)
         {
-            SendNext();
+            if (list != null)
+            {
+                var p = list.Current as JsonProperty?;
+                if (p.HasValue)
+                    if (lpOutputValues.ConnectedTo != null)
+                        lpOutputValues.Emit(p.Value.Value, true);
+                    else
+                    {
+                        if (list.MoveNext())
+                        {
+                            var p1 = list.Current as JsonProperty?;
+                            if (p1.HasValue)
+                                if (lpOutputKeys.ConnectedTo != null)
+                                    lpOutputKeys.Emit(p1.Value.Name, true);
+                                else if (lpOutputValues.ConnectedTo != null)
+                                    lpOutputValues.Emit(p1.Value.Value, true);
+                        }
+                        else
+                            list = null;
+                    }
+            }
+        }
+
+        private void lpOutputValues_Signal(RELinkPoint Sender, object Data)
+        {
+            if (list != null && list.MoveNext())
+            {
+                var p = list.Current as JsonProperty?;
+                if (p.HasValue)
+                    if (lpOutputKeys.ConnectedTo != null)
+                        lpOutputKeys.Emit(p.Value.Name, true);
+                    else if (lpOutputValues.ConnectedTo != null)
+                        lpOutputValues.Emit(p.Value.Value, true);
+            }
+            else 
+                list = null;
         }
     }
 }
