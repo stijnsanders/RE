@@ -40,12 +40,16 @@ namespace REJSON
         {
             JsonElement? e = Data as JsonElement?;
             if (e.HasValue)
+            {
                 if (_silent)
                 {
                     if (e.Value.TryGetProperty(_key, out JsonElement v)) lpOutput.Emit(v);
                 }
                 else
                     lpOutput.Emit(e.Value.GetProperty(_key));
+            }
+            else
+                throw new EReException("[JsonObjEnum] input is not a JsonElement");
         }
 
         private void silentWhenMissingToolStripMenuItem_Click(object sender, System.EventArgs e)

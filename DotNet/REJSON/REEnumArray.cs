@@ -41,6 +41,8 @@ namespace REJSON
                 list = e.Value.EnumerateArray();
                 SendNext();
             }
+            else
+                throw new EReException("[JsonObjEnum] input is not a JsonElement");
         }
 
         private void lpOutput_Signal(RELinkPoint Sender, object? Data)

@@ -29,7 +29,7 @@ namespace REJSON
         private void lpInput_Signal(RELinkPoint Sender, object? Data)
         {
             if (list != null)
-                throw new RE.EReUnexpectedInputException(lpInput);
+                throw new EReUnexpectedInputException(lpInput);
             JsonElement? e = Data as JsonElement?;
             if (e.HasValue)
             {
@@ -46,6 +46,8 @@ namespace REJSON
                 else
                     list = null;
             }
+            else
+                throw new EReException("[JsonObjEnum] input is not a JsonElement");
         }
 
         private void lpOutputKeys_Signal(RELinkPoint Sender, object Data)

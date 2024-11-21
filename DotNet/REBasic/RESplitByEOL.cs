@@ -33,7 +33,7 @@ namespace REBasic
         private void lpInput_Signal(RELinkPoint Sender, object Data)
         {
             if (IsSplitting)
-                throw new RE.EReUnexpectedInputException(lpInput);
+                throw new EReUnexpectedInputException(lpInput);
             if (lpOutput.ConnectedTo != null && Data != null)
             {
                 SplitIndex = 0;
@@ -62,7 +62,7 @@ namespace REBasic
             if (IsSplitting)
                 NextItem();
             else
-                throw new RE.EReUnexpectedInputException(lpOutput);
+                throw new EReUnexpectedInputException(lpOutput);
         }
 
         protected override void DisconnectAll()
