@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{9DA5420E-0943-4839-B1EE-844B9EC01336}
 AppName=Regular Expression
-VersionInfoVersion=2.0.4.655
-AppVerName=Regular Expression 2.0.4.655
+VersionInfoVersion=2.1.0.670
+AppVerName=Regular Expression 2.1.0.670
 AppPublisher=Double Sigma Programming
 AppPublisherURL=http://yoy.be/re
 AppSupportURL=http://yoy.be/re
@@ -31,17 +31,17 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "DotNet\bin\Release\net7.0-windows\RE.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\RE.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\RE.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\RELib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\REBasic.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\RERegex.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\REMulti.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\REFileSystem.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\REXML.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\REJSON.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DotNet\bin\Release\net7.0-windows\REHTTP.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\RE.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\RE.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\RE.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\RELib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\REBasic.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\RERegex.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\REMulti.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\REFileSystem.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\REXML.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\REJSON.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DotNet\bin\Release\net9.0-windows7.0\REHTTP.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DotNet\WhatsNew.txt"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

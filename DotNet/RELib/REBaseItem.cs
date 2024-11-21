@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
 using System.Collections;
+using System.ComponentModel.Design.Serialization;
 
 namespace RE
 {
@@ -144,7 +145,7 @@ namespace RE
             return linkpoints.ToArray();
         }
 
-		[Browsable(true),Category("Appearance"),Description("Text displayed as item title")]
+		[Browsable(true),Category("Appearance"),Description("Text displayed as item title"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
 		public string Caption
 		{
 			get
@@ -157,7 +158,7 @@ namespace RE
 			}
 		}
 
-		[Browsable(false),Category("Appearance"),Description("Display the item as focused or as member of a selection, controlled by parent LinkPanel at run-time")]
+		[Browsable(false),Category("Appearance"),Description("Display the item as focused or as member of a selection, controlled by parent LinkPanel at run-time"),DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
 		public bool Selected
 		{
 			get
@@ -180,20 +181,21 @@ namespace RE
 			}
 		}
 
-		[Category("Layout"),Description("Switch the bottom right resize handle to allow resizing of item")]
+		[Category("Layout"),Description("Switch the bottom right resize handle to allow resizing of item"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
 		public bool Resizable
 		{
 			set{imgItemResize.Visible=value;}
 			get{return imgItemResize.Visible;}
 		}
 
-        [Browsable(true), Category("Behavior"), Description("ContextMenuStrip to merge with item's ContextMenuStrip")]
+        [Browsable(true), Category("Behavior"), Description("ContextMenuStrip to merge with item's ContextMenuStrip"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ContextMenuStrip? MergeContextMenuStrip
         {
             set { mergeContextMenu = value; }
             get { return mergeContextMenu; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool Modified
         {
             set

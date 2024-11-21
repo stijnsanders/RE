@@ -1,4 +1,5 @@
-2.1.1.?
+2.1.1.670
+- target .Net 9.0 (Windows 7.0)
 - JSON enum object: separate outputs for keys and values
 2.1.0.655
 - target .Net 7.0

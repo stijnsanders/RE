@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections;
 using System.Xml;
+using System.ComponentModel;
 
 namespace RE
 {
@@ -92,6 +93,7 @@ namespace RE
             //modified = true;//see ControlAdded
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public REBaseItem? SelectedItem
         {
             get
@@ -144,6 +146,7 @@ namespace RE
             foreach (REBaseItem item in list) item.Close();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public bool Modified { get { return modified; } set { modified = value; } }
 
         private Color StrToColor(string x)

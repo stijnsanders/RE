@@ -185,6 +185,7 @@ namespace RE
 
         private string filename = "";
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public string FileName
         {
             get

@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <BaseOutputPath>..\bin\</BaseOutputPath>
     <ApplicationIcon>reData.ico</ApplicationIcon>
-    <AssemblyVersion>2.1.0.655</AssemblyVersion>
-    <FileVersion>2.1.0.655</FileVersion>
+    <AssemblyVersion>2.1.1.670</AssemblyVersion>
+    <FileVersion>2.1.1.670</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

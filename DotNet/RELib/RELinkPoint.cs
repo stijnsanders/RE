@@ -117,6 +117,7 @@ namespace RE
             //connectedTo = null; ??caller should do this (hence private)
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public RELinkPoint? ConnectedTo
         {
             get
@@ -164,7 +165,7 @@ namespace RE
             }
         }
 
-        [Browsable(false)]
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Color ConnectionColor
         {
             get { return conColor; }
@@ -230,7 +231,7 @@ namespace RE
                 ConnectedTo = lp;
         }
 
-        [Category("Appearance"), Description("Text label to display on the link point")]
+        [Category("Appearance"), Description("Text label to display on the link point"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public string Caption
         {
             get
@@ -244,7 +245,7 @@ namespace RE
             }
         }
 
-        [Category("Behavior"), Description("Label used internally to store connection information")]
+        [Category("Behavior"), Description("Label used internally to store connection information"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public string Key
         {
             get
@@ -257,7 +258,7 @@ namespace RE
             }
         }
 
-        [Category("Behavior"), Description("Determines which connections are allowed to make")]
+        [Category("Behavior"), Description("Determines which connections are allowed to make"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public RELinkPointDirection Direction
         {
             get { return direction; }
